@@ -1,0 +1,286 @@
+/* ================================
+   ✅ GLOBAL STYLES
+================================ */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+/* ================================
+   ✅ NAVBAR STYLING
+================================ */
+
+header {
+  background-color: #ff5a5f;
+  padding: 1rem 2rem;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav li {
+  margin-left: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: #e54e52;
+}
+
+/* ================================
+   ✅ MAIN CENTER CARD LAYOUT
+================================ */
+
+main {
+  text-align: center;
+  padding: 5rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  max-width: 600px;
+  border-radius: 8px;
+}
+
+h2 {
+  color: #333;
+  font-size: 2rem;
+}
+
+/* ================================
+   ✅ SHARED WHITE CARD DESIGN
+================================ */
+
+.card {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+/* ================================
+   ✅ HOME LIST (DYNAMIC HOMES)
+================================ */
+
+.home-list {
+  list-style: none;
+  margin-top: 1.5rem;
+  padding: 0;
+}
+
+.home-list li {
+  background-color: #fff;
+  margin: 0.5rem auto;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  width: 80%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ================================
+   ✅ FORM STYLING (ADD HOME)
+================================ */
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form-card input {
+  padding: 0.7rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.form-card button {
+  padding: 0.7rem;
+  background-color: #ff5a5f;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-card button:hover {
+  background-color: #e54e52;
+}
+
+/* ================================
+   ✅ SUCCESS PAGE STYLING
+================================ */
+
+.success-card {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.success-card h2 {
+  color: #ff5a5f;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.success-card p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.success-btn {
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  background-color: #ff5a5f;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.success-btn:hover {
+  background-color: #e54e52;
+}
+
+/* ================================
+   ✅ 404 ERROR PAGE STYLING
+================================ */
+
+.error-card {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.error-card h1 {
+  font-size: 5rem;
+  color: #ff5a5f;
+  margin-bottom: 0.5rem;
+}
+
+.error-card h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.error-card p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.error-btn {
+  display: inline-block;
+  padding: 0.7rem 1.6rem;
+  background-color: #ff5a5f;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.error-btn:hover {
+  background-color: #e54e52;
+}
+
+/* ================================
+   ✅ ANIMATIONS (SEXY EFFECT)
+================================ */
+
+.card,
+.success-card,
+.error-card {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================================
+   ✅ HOME CARD GRID LAYOUT
+================================ */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+/* ================================
+   ✅ HOME CARD DESIGN
+================================ */
+
+.home-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.home-card:hover {
+  transform: translateY(-5px);
+}
+
+.home-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.home-info {
+  padding: 1rem;
+}
+
+.home-info h3 {
+  margin: 0.3rem 0;
+}
+
+.location {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.price {
+  font-weight: bold;
+  color: #ff5a5f;
+  margin-top: 0.5rem;
+}
+
+.rating {
+  color: #444;
+  margin-top: 0.3rem;
+}
+
+nav a.active {
+  background-color: white;
+  color: #ff5a5f;
+}
+

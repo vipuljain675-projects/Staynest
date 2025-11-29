@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("partials/head", { title: "Add Home" }) %>
+
+<body>
+  <%- include("partials/nav", { active: "add" }) %>
+
+  <main>
+    <div class="card">
+      <h2>Register Your Home</h2>
+
+      <form method="POST" action="/host/add-home" class="form-card">
+
+        <input type="text" name="houseName" placeholder="House Name" required>
+
+        <input type="number" name="price" placeholder="Price Per Night" required>
+
+        <input type="text" name="location" placeholder="Location (City)" required>
+
+        <input type="number" step="0.1" name="rating" placeholder="Rating (1 to 5)" required>
+
+        <input type="text" name="image" placeholder="Image URL" required>
+
+        <button type="submit">Add Home</button>
+
+      </form>
+    </div>
+  </main>
+
+</body>
+</html>
