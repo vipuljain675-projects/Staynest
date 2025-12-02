@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../partials/head") %>
+<body>
+  <%- include("../partials/nav") %>
+  <main>
+    <div class="home-grid">
+      <% registeredHomes.forEach(home => { %>
+        <div class="home-card" onclick="location.href='/homes/<%= home.houseName %>'">
+          <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>">
+          <div class="home-info">
+             <div style="display: flex; justify-content: space-between;">
+                <h3><%= home.location %></h3>
+                <span class="rating">★ <%= home.rating %></span>
+             </div>
+             <p><%= home.houseName %></p>
+             <span class="price">₹<%= home.price %> <span style="font-weight: 400; color: #717171">night</span></span>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+</body>
+</html>

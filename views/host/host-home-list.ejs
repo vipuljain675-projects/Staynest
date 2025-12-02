@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../partials/head") %>
+<body>
+  <%- include("../partials/nav") %>
+  <main>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Your Listings</h1>
+        <a href="/host/add-home" class="btn btn-outline"> + Create New</a>
+    </div>
+
+    <div class="home-grid">
+      <% registeredHomes.forEach(home => { %>
+        <div class="home-card">
+          <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>">
+          <div class="home-info">
+             <h3><%= home.houseName %></h3>
+             <p class="price">₹<%= home.price %></p>
+             <div style="margin-top: 1rem; display: flex; gap: 10px;">
+                <a href="/host/edit-home/1" class="btn btn-outline" style="flex:1; text-align: center;">Edit</a>
+                <form action="/host/delete-home" method="POST" style="flex:1;">
+                    <button class="btn btn-danger" style="width: 100%;">Delete</button>
+                </form>
+             </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+</body>
+</html>

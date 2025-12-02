@@ -1,29 +1,23 @@
 const path = require("path");
 const express = require("express");
-
-const userRouter = require("./routes/userRouter");
+const storeRouter = require("./routes/storeRouter");
 const { router: hostRouter } = require("./routes/hostRouter");
+const errorsController = require("./controllers/errors");
 
 const app = express();
 
-/* ✅ ENABLE EJS */
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-/* ✅ MIDDLEWARE */
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-/* ✅ ROUTES */
-app.use(userRouter);
+app.use(storeRouter);
 app.use("/host", hostRouter);
 
-/* ✅ 404 HANDLER */
-app.use((req, res) => {
-  res.status(404).render("404");
-});
+app.use(errorsController.pageNotFound);
 
-const PORT = 3200;
+const PORT = 3600;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

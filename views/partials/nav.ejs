@@ -1,12 +1,13 @@
 <header>
   <nav>
     <ul>
-      <li>
-        <a href="/" class="<%= active === 'home' ? 'active' : '' %>">Go to Home</a>
-      </li>
-      <li>
-        <a href="/host/add-home" class="<%= active === 'add' ? 'active' : '' %>">Add Home</a>
-      </li>
+      <li><a href="/" class="<%= currentPage === 'index' ? 'active' : '' %>">Home</a></li>
+      <li><a href="/homes" class="<%= currentPage === 'home-list' ? 'active' : '' %>">All Homes</a></li>
+      <li><a href="/bookings" class="<%= currentPage === 'bookings' ? 'active' : '' %>">Bookings</a></li>
+      <li><a href="/favourites" class="<%= currentPage === 'favourites' ? 'active' : '' %>">Favorites</a></li>
+      <div style="width: 1px; height: 20px; background: #ddd;"></div>
+      <li><a href="/host/host-home-list" class="<%= currentPage === 'host-homes' ? 'active' : '' %>">Host Dashboard</a></li>
+      <li><a href="/host/add-home" class="<%= currentPage === 'addHome' ? 'active' : '' %>">Airbnb your Home</a></li>
     </ul>
   </nav>
 </header>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../partials/head") %>
+<body>
+  <%- include("../partials/nav") %>
+  <main>
+    <div class="form-container">
+        <h1>Confirm your trip</h1>
+        <p style="color: #717171; margin-bottom: 2rem;">You are booking <strong><%= homeId %></strong></p>
+        <div class="form-control">
+            <label>Check-In</label>
+            <input type="date">
+        </div>
+        <div class="form-control">
+            <label>Check-Out</label>
+            <input type="date">
+        </div>
+        <button class="submit-btn">Reserve Now</button>
+    </div>
+  </main>
+</body>
+</html>
