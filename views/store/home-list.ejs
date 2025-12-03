@@ -4,21 +4,53 @@
 <body>
   <%- include("../partials/nav") %>
   <main>
-    <div class="home-grid">
-      <% registeredHomes.forEach(home => { %>
-        <div class="home-card" onclick="location.href='/homes/<%= home.houseName %>'">
-          <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>">
-          <div class="home-info">
-             <div style="display: flex; justify-content: space-between;">
-                <h3><%= home.location %></h3>
-                <span class="rating">★ <%= home.rating %></span>
-             </div>
-             <p><%= home.houseName %></p>
-             <span class="price">₹<%= home.price %> <span style="font-weight: 400; color: #717171">night</span></span>
+    <% if (registeredHomes.length === 0) { %>
+      <div class="centered-message">
+        <h2>No homes available yet!</h2>
+        <p>Be the first to list your home.</p>
+        <a href="/host/add-home" class="btn edit-btn">List your home</a>
+      </div>
+    <% } else { %>
+      <h1 style="margin-bottom: 1rem;">Explore Homes</h1>
+      <div class="home-grid">
+        <% registeredHomes.forEach(home => { %>
+          
+          <div class="home-card">
+            <a href="/homes/<%= home.id %>">
+              <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>">
+            </a>
+
+            <div class="home-info">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <h3 style="margin: 0;"><%= home.location %></h3>
+                  <span class="rating">★ <%= home.rating %></span>
+              </div>
+              
+              <p style="color: #717171; margin: 4px 0;"><%= home.houseName %></p>
+              
+              <div style="margin-top: 6px; margin-bottom: 12px;">
+                  <span class="price">₹<%= home.price %></span> 
+                  <span style="font-weight: 300;"> night</span>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: auto;">
+                  
+                  <a href="/homes/<%= home.id %>" class="btn btn-outline" style="flex: 1; text-align: center; font-size: 0.8rem; padding: 0.5rem;">
+                      Details
+                  </a>
+
+                  <a href="/reserve/<%= home.id %>" class="btn btn-primary" style="flex: 1; text-align: center; font-size: 0.8rem; padding: 0.5rem;">
+                      Book Now
+                  </a>
+
+              </div>
+
+            </div>
           </div>
-        </div>
-      <% }) %>
-    </div>
+
+        <% }) %>
+      </div>
+    <% } %>
   </main>
 </body>
 </html>

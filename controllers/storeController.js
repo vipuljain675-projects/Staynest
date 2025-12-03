@@ -24,8 +24,8 @@ exports.getHomeList = (req, res, next) => {
 exports.getHomeDetails = (req, res, next) => {
   const homeId = req.params.homeId;
   Home.fetchAll((homes) => {
-    // Find the specific home by name (assuming name is unique for now)
-    const home = homes.find((h) => h.houseName === homeId);
+    // ✅ FIX: Find by ID, not Name
+    const home = homes.find((h) => h.id === homeId);
     
     if (!home) {
         return res.redirect("/homes");
@@ -59,7 +59,8 @@ exports.getFavouriteList = (req, res, next) => {
 exports.getReserve = (req, res, next) => {
   const homeId = req.params.homeId;
   Home.fetchAll((homes) => {
-    const home = homes.find((h) => h.houseName === homeId);
+    // ✅ FIX: Find by ID, not Name
+    const home = homes.find((h) => h.id === homeId);
     
     if (!home) {
         return res.redirect("/homes");
@@ -69,50 +70,28 @@ exports.getReserve = (req, res, next) => {
       pageTitle: "Confirm Booking",
       currentPage: "home-list",
       homeId: homeId,
-      home: home, // Pass the full home object to the view
+      home: home,
     });
   });
 };
 
 exports.postBooking = (req, res, next) => {
   const { 
-    homeId, 
-    homeName, 
-    pricePerNight, 
-    checkIn, 
-    checkOut,
-    firstName,
-    lastName,
-    phone,
-    email,
-    guests 
+    homeId, homeName, pricePerNight, checkIn, checkOut,
+    firstName, lastName, phone, email, guests 
   } = req.body;
 
-  // 1. Calculate Nights
   const date1 = new Date(checkIn);
   const date2 = new Date(checkOut);
   const diffTime = Math.abs(date2 - date1);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert ms to days
-
-  // 2. Calculate Total Price
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
   const totalPrice = diffDays * pricePerNight;
 
-  // 3. Save Booking with ALL details
   const booking = new Booking(
-    homeId,
-    homeName,
-    checkIn,
-    checkOut,
-    totalPrice,
-    firstName,
-    lastName,
-    phone,
-    email,
-    guests
+    homeId, homeName, checkIn, checkOut, totalPrice,
+    firstName, lastName, phone, email, guests
   );
   
   booking.save();
-  
-  // 4. Redirect to the receipt page
   res.redirect("/bookings");
 };

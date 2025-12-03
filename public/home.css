@@ -257,3 +257,28 @@ h1 {
   font-size: 1.1rem;
   margin-bottom: 2rem;
 }
+
+/* ================================
+   UPDATED CARD STYLING (For Buttons)
+================================ */
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Forces the card to take full height of the grid row */
+  justify-content: space-between;
+  text-decoration: none; /* Removes underline from text */
+  color: inherit;
+}
+
+.home-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Takes up all remaining space */
+  padding: 0 4px 10px 4px; /* Adds a little breathing room at bottom */
+}
+
+/* Ensure images don't have blue borders from links */
+.home-card a img {
+  display: block;
+}

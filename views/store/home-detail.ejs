@@ -21,11 +21,10 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
-        
         <div style="flex: 2; min-width: 300px;">
             <h2 style="font-size: 1.4rem; border-bottom: 1px solid #ddd; padding-bottom: 1rem;">Hosted by Airbnb Host</h2>
             <p style="color: #444; line-height: 1.6; margin-top: 1rem;">
-                Enjoy a lovely stay at <%= home.houseName %> located in the beautiful city of <%= home.location %>. 
+                Enjoy a lovely stay at <%= home.houseName %>. 
                 This home offers amazing amenities and a top-tier experience rated <%= home.rating %> stars by our guests.
             </p>
         </div>
@@ -37,26 +36,12 @@
                     <span style="color: #717171;">night</span>
                 </div>
 
-                <div style="border: 1px solid #888; border-radius: 8px; margin-bottom: 1rem;">
-                    <div style="display: flex; border-bottom: 1px solid #888;">
-                        <div style="flex: 1; padding: 0.5rem; border-right: 1px solid #888;">
-                            <small style="font-weight: bold; font-size: 0.7rem;">CHECK-IN</small>
-                            <div style="font-size: 0.9rem;">Add date</div>
-                        </div>
-                        <div style="flex: 1; padding: 0.5rem;">
-                            <small style="font-weight: bold; font-size: 0.7rem;">CHECKOUT</small>
-                            <div style="font-size: 0.9rem;">Add date</div>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="/reserve/<%= home.houseName %>" class="submit-btn" style="display: block; text-align: center; text-decoration: none;">Reserve</a>
+                <a href="/reserve/<%= home.id %>" class="submit-btn" style="display: block; text-align: center; text-decoration: none;">Reserve</a>
+                
                 <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #717171;">You won't be charged yet</p>
             </div>
         </div>
-
     </div>
   </main>
-
 </body>
 </html>
