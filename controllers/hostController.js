@@ -4,7 +4,7 @@ exports.getAddHome = (req, res, next) => {
   res.render("host/edit-home", {
     pageTitle: "Add Home",
     currentPage: "addHome",
-    editing: false, // Not editing, creating new
+    editing: false,
   });
 };
 
@@ -20,7 +20,6 @@ exports.getEditHome = (req, res, next) => {
     if (!home) {
       return res.redirect("/");
     }
-    // Render the form but with data pre-filled
     res.render("host/edit-home", {
       pageTitle: "Edit Home",
       currentPage: "host-homes",
@@ -40,10 +39,19 @@ exports.postAddHome = (req, res, next) => {
   });
 };
 
+// ✅ NEW: Handles saving the edits
+exports.postEditHome = (req, res, next) => {
+  const { id, houseName, price, location, rating, photoUrl } = req.body;
+  const updatedHomeData = { houseName, price, location, rating, photoUrl };
+  
+  Home.updateById(id, updatedHomeData, () => {
+    res.redirect("/host/host-home-list");
+  });
+};
+
 exports.postDeleteHome = (req, res, next) => {
   const homeId = req.body.homeId;
   Home.deleteById(homeId, () => {
-    // Reload the page after deletion
     res.redirect("/host/host-home-list");
   });
 };

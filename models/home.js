@@ -9,8 +9,7 @@ module.exports = class Home {
     this.location = location;
     this.rating = rating;
     this.photoUrl = photoUrl;
-    // ✅ 1. Generate unique ID
-    this.id = Math.random().toString(); 
+    this.id = Math.random().toString();
   }
 
   save() {
@@ -18,7 +17,7 @@ module.exports = class Home {
       registeredHomes.push(this);
       const homeDataPath = path.join(rootDir, "data", "homes.json");
       fs.writeFile(homeDataPath, JSON.stringify(registeredHomes), (error) => {
-        if(error) console.log("Error saving home", error);
+        if (error) console.log("Error saving home", error);
       });
     });
   }
@@ -30,24 +29,48 @@ module.exports = class Home {
     });
   }
 
-  // ✅ 2. Find a specific home for Editing
   static findById(homeId, callback) {
-    Home.fetchAll(homes => {
-      const home = homes.find(h => h.id === homeId);
+    Home.fetchAll((homes) => {
+      const home = homes.find((h) => h.id === homeId);
       callback(home);
     });
   }
 
-  // ✅ 3. Delete a specific home
+  // ✅ NEW: Update existing home
+  static updateById(homeId, updatedInfo, callback) {
+    Home.fetchAll((homes) => {
+      const homeIndex = homes.findIndex((h) => h.id === homeId);
+      if (homeIndex > -1) {
+        // Create updated home object but KEEP the old ID
+        const updatedHome = new Home(
+          updatedInfo.houseName,
+          updatedInfo.price,
+          updatedInfo.location,
+          updatedInfo.rating,
+          updatedInfo.photoUrl
+        );
+        updatedHome.id = homeId; // Restore the ID
+
+        homes[homeIndex] = updatedHome;
+        const homeDataPath = path.join(rootDir, "data", "homes.json");
+        fs.writeFile(homeDataPath, JSON.stringify(homes), (error) => {
+          if (!error) {
+            callback();
+          }
+        });
+      } else {
+        callback();
+      }
+    });
+  }
+
   static deleteById(homeId, callback) {
-    Home.fetchAll(homes => {
-      // Keep every home EXCEPT the one we want to delete
-      const updatedHomes = homes.filter(h => h.id !== homeId);
-      
+    Home.fetchAll((homes) => {
+      const updatedHomes = homes.filter((h) => h.id !== homeId);
       const homeDataPath = path.join(rootDir, "data", "homes.json");
       fs.writeFile(homeDataPath, JSON.stringify(updatedHomes), (error) => {
         if (!error) {
-            callback();
+          callback();
         }
       });
     });

@@ -7,7 +7,12 @@
     <div class="form-container">
         <h1><%= editing ? "Edit your Home" : "Airbnb your home" %></h1>
         
-        <form action="/host/add-home" method="POST">
+        <form action="/host/<%= editing ? 'edit-home' : 'add-home' %>" method="POST">
+            
+            <% if (editing) { %>
+                <input type="hidden" name="id" value="<%= home.id %>">
+            <% } %>
+
             <div class="form-control">
                 <label>Property Name</label>
                 <input type="text" name="houseName" placeholder="e.g. Modern Loft" value="<%= editing ? home.houseName : '' %>" required>
