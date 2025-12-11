@@ -51,7 +51,7 @@ exports.getHomeDetails = (req, res, next) => {
 exports.getFavouriteList = (req, res, next) => {
   Favourite.getFavourites((favIds) => {
     Home.fetchAll((homes) => {
-      const favouriteHomes = homes.filter(home => favIds.includes(home.id));
+      const favouriteHomes = homes.filter((home) => favIds.includes(home.id));
       res.render("store/favourite-list", {
         pageTitle: "My Favourites",
         currentPage: "favourites",
