@@ -16,52 +16,84 @@ exports.getEditHome = (req, res, next) => {
     return res.redirect("/host/host-home-list");
   }
 
-  Home.findById(homeId, (home) => {
-    if (!home) {
-      return res.redirect("/");
-    }
-    res.render("host/edit-home", {
-      pageTitle: "Edit Home",
-      currentPage: "host-homes",
-      editing: editing,
-      home: home,
-    });
-  });
+  Home.findById(homeId)
+    .then(([homes]) => {
+      const home = homes[0];
+      if (!home) {
+        return res.redirect("/");
+      }
+      res.render("host/edit-home", {
+        pageTitle: "Edit Home",
+        currentPage: "host-homes",
+        editing: editing,
+        home: home,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.postAddHome = (req, res, next) => {
-  const { houseName, rating, price, location, photoUrl } = req.body;
-  const home = new Home(houseName, price, location, rating, photoUrl);
-  home.save();
-  res.render("host/home-added", {
-    pageTitle: "Success",
-    currentPage: "addHome",
-  });
+  // 1. We extract all fields, including description
+  const { houseName, rating, price, location, photoUrl, description } = req.body;
+  
+  // 2. SAFETY CHECK: If description is undefined, use an empty string ""
+  // This prevents the "Bind parameters cannot be undefined" crash
+  const validDescription = description || ""; 
+
+  const home = new Home(houseName, price, location, rating, photoUrl, validDescription);
+  
+  home.save()
+    .then(() => {
+      res.render("host/home-added", {
+        pageTitle: "Success",
+        currentPage: "addHome",
+      });
+    })
+    .catch((err) => {
+      console.log("Error saving home:", err);
+      res.redirect("/host/add-home"); // Redirect back on error
+    });
 };
 
-// ✅ NEW: Handles saving the edits
 exports.postEditHome = (req, res, next) => {
-  const { id, houseName, price, location, rating, photoUrl } = req.body;
-  const updatedHomeData = { houseName, price, location, rating, photoUrl };
+  const { id, houseName, price, location, rating, photoUrl, description } = req.body;
   
-  Home.updateById(id, updatedHomeData, () => {
-    res.redirect("/host/host-home-list");
-  });
+  // Safety check for edit as well
+  const validDescription = description || "";
+
+  const updatedHomeData = { 
+    houseName, 
+    price, 
+    location, 
+    rating, 
+    photoUrl, 
+    description: validDescription 
+  };
+  
+  Home.updateById(id, updatedHomeData)
+    .then(() => {
+      res.redirect("/host/host-home-list");
+    })
+    .catch((err) => console.log("Error updating home:", err));
 };
 
 exports.postDeleteHome = (req, res, next) => {
   const homeId = req.body.homeId;
-  Home.deleteById(homeId, () => {
-    res.redirect("/host/host-home-list");
-  });
+  Home.deleteById(homeId)
+    .then(() => {
+      res.redirect("/host/host-home-list");
+    })
+    .catch((err) => console.log("Error deleting home:", err));
 };
 
 exports.getHostHomes = (req, res, next) => {
-  Home.fetchAll((registeredHomes) => {
-    res.render("host/host-home-list", {
-      registeredHomes: registeredHomes,
-      pageTitle: "Host Dashboard",
-      currentPage: "host-homes",
-    });
-  });
+  Home.fetchAll()
+    .then(([registeredHomes]) => {
+      res.render("host/host-home-list", {
+        registeredHomes: registeredHomes,
+        pageTitle: "Host Dashboard",
+        currentPage: "host-homes",
+      });
+    })
+    .catch((err) => console.log(err));
 };

@@ -1,11 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const rootDir = require("../utils/pathUtil");
+const db = require("../utils/databaseUtils");
 
 module.exports = class Booking {
   constructor(homeId, homeName, startDate, endDate, totalPrice, firstName, lastName, phone, email, guests) {
     this.homeId = homeId;
-    this.homeName = homeName;
+    this.homeName = homeName; // Note: We don't save homeName to DB, we join it in fetchAll
     this.startDate = startDate;
     this.endDate = endDate;
     this.totalPrice = totalPrice;
@@ -13,39 +11,26 @@ module.exports = class Booking {
     this.lastName = lastName;
     this.phone = phone;
     this.email = email;
-    this.guests = guests;
-    
-    // ✅ NEW: Generate a Unique "Ticket Number" (ID)
-    this.id = Math.random().toString(); 
   }
 
   save() {
-    Booking.fetchAll((bookings) => {
-      bookings.push(this);
-      const bookingPath = path.join(rootDir, "data", "bookings.json");
-      fs.writeFile(bookingPath, JSON.stringify(bookings), (err) => {
-        if (err) console.log("Error saving booking:", err);
-      });
-    });
+    return db.execute(
+      "INSERT INTO bookings (homeId, firstName, lastName, email, startDate, endDate, totalPrice) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [this.homeId, this.firstName, this.lastName, this.email, this.startDate, this.endDate, this.totalPrice]
+    );
   }
 
-  static fetchAll(callback) {
-    const bookingPath = path.join(rootDir, "data", "bookings.json");
-    fs.readFile(bookingPath, (err, data) => {
-      callback(!err ? JSON.parse(data) : []);
-    });
+  static fetchAll() {
+    // JOIN is the magic here. It gets the houseName from the homes table using homeId
+    return db.execute(`
+      SELECT bookings.*, homes.houseName 
+      FROM bookings 
+      JOIN homes ON bookings.homeId = homes.id
+      ORDER BY bookings.startDate DESC
+    `);
   }
 
-  // ✅ NEW: Delete Logic (Cancellation)
-  static deleteById(bookingId, callback) {
-    Booking.fetchAll((bookings) => {
-      // Filter out the booking we want to cancel
-      const updatedBookings = bookings.filter((b) => b.id !== bookingId);
-      
-      const bookingPath = path.join(rootDir, "data", "bookings.json");
-      fs.writeFile(bookingPath, JSON.stringify(updatedBookings), (err) => {
-        if (!err) callback();
-      });
-    });
+  static deleteById(bookingId) {
+    return db.execute("DELETE FROM bookings WHERE id = ?", [bookingId]);
   }
 };

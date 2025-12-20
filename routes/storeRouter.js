@@ -1,21 +1,22 @@
 const express = require("express");
-const router = express.Router();
 const storeController = require("../controllers/storeController");
+const router = express.Router();
 
 router.get("/", storeController.getIndex);
 router.get("/homes", storeController.getHomeList);
-router.get("/bookings", storeController.getBookings);
 router.get("/homes/:homeId", storeController.getHomeDetails);
-router.get("/reserve/:homeId", storeController.getReserve);
-router.post("/bookings", storeController.postBooking);
+
 router.get("/favourites", storeController.getFavouriteList);
 router.post("/favourites", storeController.postAddToFavourite);
-router.post("/favourites/delete", storeController.postRemoveFavourite);
+router.post("/favourites/remove-favourite", storeController.postRemoveFavourite);
 
-// ✅ NEW SEARCH ROUTE
+router.get("/bookings", storeController.getBookings);
+router.post("/bookings", storeController.postBooking);
+router.post("/bookings/cancel", storeController.postCancelBooking);
+
+// ✅ THIS WAS MISSING! Adding it back now:
+router.get("/reserve/:homeId", storeController.getReserve);
+
 router.get("/search", storeController.getSearch);
-
-// ✅ NEW: Route for Cancelling
-router.post("/bookings/delete", storeController.postCancelBooking);
 
 module.exports = router;

@@ -20,9 +20,7 @@ body {
   background-color: #fff;
 }
 
-/* ================================
-   REALISTIC NAVBAR
-================================ */
+/* NAVBAR */
 header {
   position: sticky;
   top: 0;
@@ -35,13 +33,12 @@ header {
 
 nav {
   display: flex;
-  justify-content: space-between; /* Logo Left, Search Center, Menu Right */
+  justify-content: space-between;
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* 1. The Menu Links */
 .nav-links {
   list-style: none;
   display: flex;
@@ -64,7 +61,6 @@ nav {
 .nav-links a:hover { background-color: #f7f7f7; }
 .nav-links a.active { color: black; font-weight: 600; }
 
-/* 2. The Search "Pill" */
 .search-bar-container {
   display: flex;
   align-items: center;
@@ -103,9 +99,7 @@ nav {
   margin-left: 8px;
 }
 
-/* ================================
-   MAIN LAYOUT
-================================ */
+/* LAYOUT */
 main {
   max-width: 1440px;
   margin: 2rem auto;
@@ -115,12 +109,10 @@ main {
 
 h1 { font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600; }
 
-/* ================================
-   UPDATED GRID & CARD(designing too)
-================================ */
+/* GRID & CARD */
 .home-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); /* Responsive */
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 24px;
 }
 
@@ -137,7 +129,7 @@ h1 { font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600; }
 
 .home-card img {
   width: 100%;
-  aspect-ratio: 20 / 19; /* Standard Airbnb Ratio */
+  aspect-ratio: 20 / 19;
   object-fit: cover;
   border-radius: 12px;
   margin-bottom: 12px;
@@ -153,7 +145,6 @@ h1 { font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600; }
 .home-info p { margin: 2px 0; color: var(--gray-light); font-size: 0.9rem; }
 .price { color: var(--airbnb-dark); font-weight: 600; margin-top: 6px; }
 
-/* Action Buttons Area */
 .card-actions {
   display: flex;
   gap: 10px;
@@ -179,9 +170,7 @@ h1 { font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600; }
 .btn-outline:hover { background: #f7f7f7; }
 .btn-danger { color: var(--airbnb-red); border: 1px solid var(--airbnb-red); background: white; }
 
-/* ================================
-   FORMS & MESSAGES
-================================ */
+/* FORMS */
 .form-container {
   max-width: 600px;
   margin: 2rem auto;

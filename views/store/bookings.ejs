@@ -24,9 +24,9 @@
                         
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div>
-                                <h2 style="margin: 0 0 0.5rem 0;"><%= booking.homeName %></h2>
+                                <h2 style="margin: 0 0 0.5rem 0;"><%= booking.houseName %></h2>
                                 <p style="color: #717171; margin-bottom: 1rem; font-size: 0.9rem;">
-                                    Booking ID: #<%= booking.id ? booking.id.substring(2, 8) : '---' %> <br>
+                                    Booking ID: #<%= booking.id %> <br>
                                     Status: <span style="color: green; font-weight: bold;">Confirmed</span>
                                 </p>
                             </div>
@@ -45,18 +45,18 @@
                         <div style="display: flex; gap: 2rem; margin-bottom: 1rem;">
                             <div>
                                 <small style="font-weight: bold; color: #222; font-size: 0.7rem;">CHECK-IN</small>
-                                <div style="color: #717171;"><%= booking.startDate %></div>
+                                <div style="color: #717171;"><%= new Date(booking.startDate).toLocaleDateString() %></div>
                             </div>
                             <div>
                                 <small style="font-weight: bold; color: #222; font-size: 0.7rem;">CHECK-OUT</small>
-                                <div style="color: #717171;"><%= booking.endDate %></div>
+                                <div style="color: #717171;"><%= new Date(booking.endDate).toLocaleDateString() %></div>
                             </div>
                         </div>
 
                         <div style="border-top: 1px solid #eee; padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-size: 1.2rem; font-weight: bold;">Total Bill: ₹<%= booking.totalPrice %></span>
                             
-                            <form action="/bookings/delete" method="POST" onsubmit="return confirm('Are you sure you want to cancel this trip?');">
+                            <form action="/bookings/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this trip?');">
                                 <input type="hidden" name="bookingId" value="<%= booking.id %>">
                                 <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Cancel Trip</button>
                             </form>

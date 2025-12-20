@@ -1,84 +1,54 @@
-const fs = require("fs");
-const path = require("path");
-const rootDir = require("../utils/pathUtil");
+const db = require("../utils/databaseUtils");
 
 module.exports = class Home {
-  constructor(houseName, price, location, rating, photoUrl) {
+  constructor(houseName, price, location, rating, photoUrl, description) {
     this.houseName = houseName;
     this.price = price;
     this.location = location;
     this.rating = rating;
     this.photoUrl = photoUrl;
-    this.id = Math.random().toString();
+    this.description = description;
   }
 
   save() {
-    Home.fetchAll((registeredHomes) => {
-      registeredHomes.push(this);
-      const homeDataPath = path.join(rootDir, "data", "homes.json");
-      fs.writeFile(homeDataPath, JSON.stringify(registeredHomes), (error) => {
-        if (error) console.log("Error saving home", error);
-      });
-    });
+    return db.execute(
+      "INSERT INTO homes (houseName, price, location, rating, photoUrl, description) VALUES (?, ?, ?, ?, ?, ?)",
+      [this.houseName, this.price, this.location, this.rating, this.photoUrl, this.description]
+    );
   }
 
-  static fetchAll(callback) {
-    const homeDataPath = path.join(rootDir, "data", "homes.json");
-    fs.readFile(homeDataPath, (err, data) => {
-      callback(!err ? JSON.parse(data) : []);
-    });
+  static fetchAll() {
+    return db.execute("SELECT * FROM homes");
   }
 
-  static findById(homeId, callback) {
-    Home.fetchAll((homes) => {
-      const home = homes.find((h) => h.id === homeId);
-      callback(home);
-    });
+  static findById(homeId) {
+    return db.execute("SELECT * FROM homes WHERE id = ?", [homeId]);
   }
 
-  static updateById(homeId, updatedInfo, callback) {
-    Home.fetchAll((homes) => {
-      const homeIndex = homes.findIndex((h) => h.id === homeId);
-      if (homeIndex > -1) {
-        const updatedHome = new Home(
-          updatedInfo.houseName,
-          updatedInfo.price,
-          updatedInfo.location,
-          updatedInfo.rating,
-          updatedInfo.photoUrl
-        );
-        updatedHome.id = homeId;
-        homes[homeIndex] = updatedHome;
-        const homeDataPath = path.join(rootDir, "data", "homes.json");
-        fs.writeFile(homeDataPath, JSON.stringify(homes), (error) => {
-          if (!error) callback();
-        });
-      } else {
-        callback();
-      }
-    });
+  static updateById(homeId, updatedInfo) {
+    return db.execute(
+      "UPDATE homes SET houseName=?, price=?, location=?, rating=?, photoUrl=?, description=? WHERE id=?",
+      [
+        updatedInfo.houseName,
+        updatedInfo.price,
+        updatedInfo.location,
+        updatedInfo.rating,
+        updatedInfo.photoUrl,
+        updatedInfo.description,
+        homeId,
+      ]
+    );
   }
 
-  static deleteById(homeId, callback) {
-    Home.fetchAll((homes) => {
-      const updatedHomes = homes.filter((h) => h.id !== homeId);
-      const homeDataPath = path.join(rootDir, "data", "homes.json");
-      fs.writeFile(homeDataPath, JSON.stringify(updatedHomes), (error) => {
-        if (!error) callback();
-      });
-    });
+  static deleteById(homeId) {
+    return db.execute("DELETE FROM homes WHERE id = ?", [homeId]);
   }
 
-  // ✅ NEW: Search Logic
-  static search(query, callback) {
-    Home.fetchAll((homes) => {
-      const results = homes.filter(home => {
-          const lowerLocation = home.location.toLowerCase();
-          const lowerTitle = home.houseName.toLowerCase();
-          const lowerQuery = query.toLowerCase();
-          return lowerLocation.includes(lowerQuery) || lowerTitle.includes(lowerQuery);
-      });
-      callback(results);
-    });
+  static search(query) {
+    const keyword = `%${query}%`;
+    return db.execute(
+      "SELECT * FROM homes WHERE houseName LIKE ? OR location LIKE ?", 
+      [keyword, keyword]
+    );
   }
 };

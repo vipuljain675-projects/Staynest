@@ -32,7 +32,7 @@
                   
                   <a href="/homes/<%= home.id %>" class="btn btn-outline" style="flex: 1; text-align: center;">Details</a>
                   
-                  <form action="/favourites/delete" method="POST" style="flex: 1;">
+                  <form action="/favourites/remove-favourite" method="POST" style="flex: 1;">
                       <input type="hidden" name="homeId" value="<%= home.id %>">
                       <button class="btn btn-danger" style="width: 100%;">Remove</button>
                   </form>

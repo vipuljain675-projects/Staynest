@@ -1,33 +1,17 @@
-const fs = require("fs");
-const path = require("path");
-const rootDir = require("../utils/pathUtil");
-
-const favouriteDataPath = path.join(rootDir, "data", "favourite.json");
+const db = require("../utils/databaseUtils");
 
 module.exports = class Favourite {
   
-  static addToFavourites(homeId, callback) {
-    Favourite.getFavourites((favourites) => {
-      // Check if it already exists (prevent duplicates)
-      if (!favourites.includes(homeId)) {
-        favourites.push(homeId);
-        fs.writeFile(favouriteDataPath, JSON.stringify(favourites), callback);
-      } else {
-        callback(); // Already there, do nothing but return
-      }
-    });
+  static addToFavourites(homeId) {
+    // INSERT IGNORE means: if it's already there, ignore the error (don't duplicate)
+    return db.execute("INSERT IGNORE INTO favourites (homeId) VALUES (?)", [homeId]);
   }
 
-  static getFavourites(callback) {
-    fs.readFile(favouriteDataPath, (err, data) => {
-      callback(!err ? JSON.parse(data) : []);
-    });
+  static getFavourites() {
+    return db.execute("SELECT homeId FROM favourites");
   }
 
-  static deleteById(delHomeId, callback) {
-    Favourite.getFavourites((favourites) => {
-      const updatedFavourites = favourites.filter((homeId) => homeId !== delHomeId);
-      fs.writeFile(favouriteDataPath, JSON.stringify(updatedFavourites), callback);
-    });
+  static deleteById(homeId) {
+    return db.execute("DELETE FROM favourites WHERE homeId = ?", [homeId]);
   }
 };
