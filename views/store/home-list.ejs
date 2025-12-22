@@ -1,70 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include("../partials/head") %>
+<%- include('../partials/head') %>
+</head>
 <body>
-  <%- include("../partials/nav") %>
-  
-  <main>
-    <% if (isSearch) { %>
-        <h1 style="margin-bottom: 1.5rem;">Search Results</h1>
-    <% } else { %>
-        <h1 style="margin-bottom: 1.5rem;">Explore Homes</h1>
-    <% } %>
+  <%- include('../partials/nav') %>
 
-    <% if (registeredHomes.length === 0) { %>
-      
-      <div class="centered-message">
-        <% if (isSearch) { %>
-            <h2>No matches found</h2>
-            <p>We couldn't find any homes matching your search.</p>
-            <a href="/homes" class="btn btn-outline">Clear Search</a>
-        <% } else { %>
-            <h2>No homes available yet!</h2>
-            <p>Be the first to list your home.</p>
-            <a href="/host/add-home" class="btn btn-primary">List your home</a>
-        <% } %>
-      </div>
-
-    <% } else { %>
-      
-      <div class="home-grid">
-        <% registeredHomes.forEach(home => { %>
-          
-          <div class="home-card">
-            <a href="/homes/<%= home.id %>">
-              <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>">
-            </a>
-
-            <div class="home-info">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                  <h3 style="margin: 0;"><%= home.location %></h3>
-                  <span class="rating">★ <%= home.rating %></span>
+  <main class="container mt-4">
+    <h2 class="mb-4 fw-bold">Explore Homes</h2>
+    
+    <div class="row">
+      <% if (registeredHomes.length > 0) { %>
+        <% for (let home of registeredHomes) { %>
+          <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-0 shadow-card">
+              <div class="position-relative">
+                <img src="<%= home.photoUrl %>" class="card-img-top rounded-3" alt="<%= home.houseName %>" style="height: 250px; object-fit: cover;">
+                <span class="position-absolute top-0 end-0 m-2 badge bg-light text-dark shadow-sm">⭐ <%= home.rating %></span>
               </div>
               
-              <p style="color: #717171; margin: 4px 0;"><%= home.houseName %></p>
-              
-              <div style="margin-top: 6px;">
-                  <span class="price">₹<%= home.price %></span> 
-                  <span style="font-weight: 300;"> night</span>
-              </div>
+              <div class="card-body px-2">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="card-title fw-bold mb-0"><%= home.houseName %></h5>
+                </div>
+                <p class="text-muted small mb-2"><%= home.location %></p>
+                <p class="card-text">
+                  <span class="fw-bold">₹<%= home.price %></span> night
+                </p>
 
-              <div class="card-actions">
-                  <a href="/homes/<%= home.id %>" class="btn btn-outline" style="flex: 1; text-align: center;">Details</a>
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                  <a href="/homes/<%= home._id %>" class="btn btn-sm btn-outline-primary">Details</a>
                   
-                  <form action="/favourites" method="POST" style="flex: 0;">
-                      <input type="hidden" name="homeId" value="<%= home.id %>">
-                      <button class="btn btn-outline" style="padding: 0.5rem 0.8rem; font-size: 1.2rem; line-height: 1; color: #ff385c; border-color: #ff385c;">♡</button>
-                  </form>
+                  <a href="/reserve/<%= home._id %>" class="btn btn-sm btn-primary">Book</a>
 
-                  <a href="/reserve/<%= home.id %>" class="btn btn-primary" style="flex: 1; text-align: center;">Book</a>
+                  <form action="/favourites/add" method="POST" class="d-inline">
+                    <input type="hidden" name="homeId" value="<%= home._id %>">
+                    <button type="submit" class="btn btn-sm btn-light border rounded-circle text-danger">
+                      <i class="bi bi-heart-fill"></i>
+                    </button>
+                  </form>
+                </div>
+
               </div>
             </div>
           </div>
-
-        <% }) %>
-      </div>
-
-    <% } %>
+        <% } %>
+      <% } else { %>
+        <div class="text-center w-100 mt-5">
+          <h3>No homes found!</h3>
+        </div>
+      <% } %>
+    </div>
   </main>
 </body>
 </html>

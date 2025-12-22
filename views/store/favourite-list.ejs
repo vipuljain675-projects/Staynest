@@ -1,50 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include("../partials/head") %>
+<%- include('../partials/head') %>
+</head>
 <body>
-  <%- include("../partials/nav") %>
-  
-  <main>
-    <h1 style="margin-bottom: 1rem;">My Wishlist</h1>
+  <%- include('../partials/nav') %>
 
-    <% if (favouriteHomes.length === 0) { %>
-      <div class="centered-message">
-        <h2>No favorites yet!</h2>
-        <p>Save homes you love to view them here.</p>
-        <a href="/homes" class="btn btn-primary">Start Exploring</a>
-      </div>
-    <% } else { %>
-      
-      <div class="home-grid">
-        <% favouriteHomes.forEach(home => { %>
-          
-          <div class="home-card">
-            <a href="/homes/<%= home.id %>">
-              <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>">
-            </a>
-
-            <div class="home-info">
-              <h3><%= home.location %></h3>
-              <p style="color: #717171; margin: 4px 0;"><%= home.houseName %></p>
-              <span class="price">₹<%= home.price %></span>
-
-              <div style="display: flex; gap: 10px; margin-top: auto;">
+  <main class="container mt-4">
+    <h1>My Favourites</h1>
+    <div class="row mt-4">
+      <% if (favouriteHomes.length > 0) { %>
+        <% for (let home of favouriteHomes) { %>
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img src="<%= home.photoUrl %>" class="card-img-top" alt="<%= home.houseName %>">
+              <div class="card-body">
+                <h5 class="card-title"><%= home.houseName %></h5>
+                <p class="card-text"><%= home.location %></p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="/homes/<%= home._id %>" class="btn btn-primary">View</a>
                   
-                  <a href="/homes/<%= home.id %>" class="btn btn-outline" style="flex: 1; text-align: center;">Details</a>
-                  
-                  <form action="/favourites/remove-favourite" method="POST" style="flex: 1;">
-                      <input type="hidden" name="homeId" value="<%= home.id %>">
-                      <button class="btn btn-danger" style="width: 100%;">Remove</button>
+                  <form action="/favourites/delete" method="POST">
+                    <input type="hidden" name="homeId" value="<%= home._id %>">
+                    <button type="submit" class="btn btn-danger">Remove</button>
                   </form>
-
+                </div>
               </div>
             </div>
           </div>
-
-        <% }) %>
-      </div>
-
-    <% } %>
+        <% } %>
+      <% } else { %>
+        <div class="text-center w-100">
+          <h3>No favourites added yet.</h3>
+        </div>
+      <% } %>
+    </div>
   </main>
 </body>
 </html>

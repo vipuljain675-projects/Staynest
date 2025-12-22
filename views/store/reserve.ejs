@@ -1,66 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include("../partials/head") %>
+<%- include('../partials/head') %>
+</head>
 <body>
-  <%- include("../partials/nav") %>
-  
-  <main>
-    <div class="form-container">
-        <h1>Confirm your trip</h1>
-        <p style="color: #717171; margin-bottom: 2rem;">You are booking <strong><%= home.houseName %></strong></p>
-        
-        <form action="/bookings" method="POST">
-            
-            <input type="hidden" name="homeId" value="<%= homeId %>">
+  <%- include('../partials/nav') %>
+
+  <main class="container mt-5">
+    <div class="row">
+      <div class="col-md-7">
+        <div class="mb-4">
+          <a href="/homes/<%= home._id %>" class="text-dark text-decoration-none">
+            <i class="bi bi-chevron-left small"></i> Back
+          </a>
+          <h2 class="fw-bold mt-2">Confirm and pay</h2>
+        </div>
+
+        <div class="card p-4 border rounded-4 shadow-sm">
+          <h4 class="mb-3">Your trip</h4>
+          <form action="/bookings" method="POST">
+            <input type="hidden" name="homeId" value="<%= home._id %>">
             <input type="hidden" name="homeName" value="<%= home.houseName %>">
             <input type="hidden" name="pricePerNight" value="<%= home.price %>">
 
-            <div style="display: flex; gap: 1rem;">
-                <div class="form-control" style="flex: 1;">
-                    <label>First Name</label>
-                    <input type="text" name="firstName" placeholder="John" required>
-                </div>
-                <div class="form-control" style="flex: 1;">
-                    <label>Last Name</label>
-                    <input type="text" name="lastName" placeholder="Doe" required>
-                </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">CHECK-IN</label>
+                <input type="date" name="checkIn" class="form-control p-3" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">CHECK-OUT</label>
+                <input type="date" name="checkOut" class="form-control p-3" required>
+              </div>
             </div>
 
-            <div class="form-control">
-                <label>Email Address</label>
-                <input type="email" name="email" placeholder="john@example.com" required>
+            <div class="mb-3">
+              <label class="form-label fw-bold small">GUESTS</label>
+              <input type="number" name="guests" class="form-control p-3" value="1" min="1" required>
             </div>
 
-            <div class="form-control">
-                <label>Phone Number</label>
-                <input type="tel" name="phone" placeholder="+91 98765 43210" required>
-            </div>
+            <hr class="my-4">
             
-            <div class="form-control">
-                <label>Number of Guests</label>
-                <input type="number" name="guests" min="1" max="10" value="1" required>
+            <h4 class="mb-3">Contact Info</h4>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <input type="text" name="firstName" class="form-control p-3 mb-3" placeholder="First Name" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" name="lastName" class="form-control p-3 mb-3" placeholder="Last Name" required>
+              </div>
             </div>
+            <input type="tel" name="phone" class="form-control p-3 mb-3" placeholder="Phone Number" required>
+            <input type="email" name="email" class="form-control p-3 mb-3" placeholder="Email Address" required>
 
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 1.5rem 0;">
+            <button type="submit" class="btn btn-primary btn-lg w-100 mt-3 py-3 fw-bold">
+              Confirm and Pay
+            </button>
+          </form>
+        </div>
+      </div>
 
-            <div style="display: flex; gap: 1rem;">
-                <div class="form-control" style="flex: 1;">
-                    <label>Check-In</label>
-                    <input type="date" name="checkIn" required>
-                </div>
-                <div class="form-control" style="flex: 1;">
-                    <label>Check-Out</label>
-                    <input type="date" name="checkOut" required>
-                </div>
+      <div class="col-md-5 ps-md-5 mt-4 mt-md-0">
+        <div class="card p-4 border rounded-4 shadow-sm sticky-top" style="top: 100px;">
+          <div class="d-flex mb-3 border-bottom pb-3">
+            <img src="<%= home.photoUrl %>" class="rounded me-3" width="100" height="100" style="object-fit: cover;">
+            <div>
+              <p class="text-muted small mb-1">Entire home</p>
+              <h5 class="fw-bold mb-1"><%= home.houseName %></h5>
+              <p class="small">⭐ <%= home.rating %> (Superhost)</p>
             </div>
-
-            <div style="margin-bottom: 1rem; padding: 1rem; background: #f7f7f7; border-radius: 8px;">
-                <p><strong>Rate:</strong> ₹<%= home.price %> / night</p>
-                <p style="font-size: 0.9rem; color: #717171;">Total calculated at checkout</p>
-            </div>
-
-            <button class="submit-btn" type="submit">Reserve Now</button>
-        </form>
+          </div>
+          
+          <h4 class="fw-bold">Price details</h4>
+          <div class="d-flex justify-content-between mt-3">
+            <span class="text-decoration-underline">₹<%= home.price %> x 1 night</span>
+            <span>₹<%= home.price %></span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span class="text-decoration-underline">Cleaning fee</span>
+            <span>₹0</span>
+          </div>
+          <div class="d-flex justify-content-between mt-3 pt-3 border-top fw-bold fs-5">
+            <span>Total (INR)</span>
+            <span>₹<%= home.price %></span>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </body>

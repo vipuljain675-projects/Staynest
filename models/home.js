@@ -1,54 +1,58 @@
-const db = require("../utils/databaseUtils");
+const mongodb = require('mongodb');
+const getDb = require("../utils/databaseUtils").getDb;
 
-module.exports = class Home {
-  constructor(houseName, price, location, rating, photoUrl, description) {
+class Home {
+  constructor(houseName, price, location, rating, photoUrl, description, _id) {
     this.houseName = houseName;
     this.price = price;
     this.location = location;
     this.rating = rating;
     this.photoUrl = photoUrl;
     this.description = description;
+    this._id = _id ? new mongodb.ObjectId(_id) : null;
   }
 
   save() {
-    return db.execute(
-      "INSERT INTO homes (houseName, price, location, rating, photoUrl, description) VALUES (?, ?, ?, ?, ?, ?)",
-      [this.houseName, this.price, this.location, this.rating, this.photoUrl, this.description]
-    );
+    const db = getDb();
+    let dbOp;
+    if (this._id) {
+      dbOp = db.collection("homes").updateOne({ _id: this._id }, { $set: this });
+    } else {
+      dbOp = db.collection("homes").insertOne(this);
+    }
+    return dbOp.then(result => console.log(result)).catch(err => console.log(err));
   }
 
   static fetchAll() {
-    return db.execute("SELECT * FROM homes");
+    const db = getDb();
+    return db.collection("homes").find().toArray();
   }
 
   static findById(homeId) {
-    return db.execute("SELECT * FROM homes WHERE id = ?", [homeId]);
+    const db = getDb();
+    return db.collection("homes")
+      .find({ _id: new mongodb.ObjectId(homeId) })
+      .next();
   }
 
-  static updateById(homeId, updatedInfo) {
-    return db.execute(
-      "UPDATE homes SET houseName=?, price=?, location=?, rating=?, photoUrl=?, description=? WHERE id=?",
-      [
-        updatedInfo.houseName,
-        updatedInfo.price,
-        updatedInfo.location,
-        updatedInfo.rating,
-        updatedInfo.photoUrl,
-        updatedInfo.description,
-        homeId,
-      ]
-    );
+  // 👇 UPDATED SEARCH LOGIC
+  static search(query) {
+    const db = getDb();
+    return db.collection("homes")
+      .find({
+        $or: [
+          { houseName: { $regex: query, $options: "i" } }, // Search by Name
+          { location: { $regex: query, $options: "i" } }   // Search by Location
+        ]
+      })
+      .toArray();
   }
 
   static deleteById(homeId) {
-    return db.execute("DELETE FROM homes WHERE id = ?", [homeId]);
+    const db = getDb();
+    return db.collection("homes")
+      .deleteOne({ _id: new mongodb.ObjectId(homeId) });
   }
+}
 
-  static search(query) {
-    const keyword = `%${query}%`;
-    return db.execute(
-      "SELECT * FROM homes WHERE houseName LIKE ? OR location LIKE ?", 
-      [keyword, keyword]
-    );
-  }
-};
+module.exports = Home;

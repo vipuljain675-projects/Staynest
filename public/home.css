@@ -1,188 +1,108 @@
+/* --- 1. FONTS & GLOBALS --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
   --airbnb-red: #ff385c;
-  --airbnb-dark: #222222;
-  --gray-light: #717171;
-  --gray-bg: #f7f7f7;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
-  --shadow-md: 0 6px 16px rgba(0,0,0,0.12);
-  --shadow-hover: 0 6px 20px rgba(0,0,0,0.2);
+  --airbnb-hover: #d90b3e;
+  --dark: #222222;
+  --gray: #717171;
+  --card-radius: 12px;
 }
 
-* { box-sizing: border-box; }
-
 body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  color: var(--airbnb-dark);
+  font-family: 'Poppins', sans-serif !important;
+  color: var(--dark);
   background-color: #fff;
 }
 
-/* NAVBAR */
-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
-  border-bottom: 1px solid #ebebeb;
-  padding: 1rem 2rem;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+/* --- 2. THE AIRBNB RED BUTTONS --- */
+.btn-primary {
+  background-color: var(--airbnb-red) !important;
+  border-color: var(--airbnb-red) !important;
+  font-weight: 600;
+  padding: 8px 24px;
+  border-radius: 8px;
 }
 
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1400px;
-  margin: 0 auto;
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+  background-color: var(--airbnb-hover) !important;
+  border-color: var(--airbnb-hover) !important;
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  padding: 0;
-  margin: 0;
-  align-items: center;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--airbnb-dark);
-  font-weight: 500;
-  font-size: 0.9rem;
-  padding: 0.5rem 0.8rem;
-  border-radius: 20px;
-  transition: background 0.2s;
-}
-
-.nav-links a:hover { background-color: #f7f7f7; }
-.nav-links a.active { color: black; font-weight: 600; }
-
-.search-bar-container {
-  display: flex;
-  align-items: center;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 40px;
-  padding: 4px 4px 4px 16px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-  transition: box-shadow 0.2s;
-}
-
-.search-bar-container:hover {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
-}
-
-.search-input {
-  border: none;
-  outline: none;
-  font-size: 0.9rem;
-  color: #222;
-  width: 200px;
+.btn-outline-primary {
+  color: var(--airbnb-red) !important;
+  border-color: var(--airbnb-red) !important;
   font-weight: 500;
 }
 
-.search-btn {
-  background-color: var(--airbnb-red);
-  color: white;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-left: 8px;
+.btn-outline-primary:hover {
+  background-color: var(--airbnb-red) !important;
+  color: white !important;
 }
 
-/* LAYOUT */
-main {
-  max-width: 1440px;
-  margin: 2rem auto;
-  padding: 0 2rem;
-  min-height: 80vh;
-}
-
-h1 { font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600; }
-
-/* GRID & CARD */
-.home-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 24px;
-}
-
-.home-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  text-decoration: none;
-  color: inherit;
+/* --- 3. CARDS --- */
+.card {
+  border: none !important;
+  border-radius: var(--card-radius) !important;
   transition: transform 0.2s;
 }
 
-.home-card:hover { transform: translateY(-3px); }
-
-.home-card img {
-  width: 100%;
-  aspect-ratio: 20 / 19;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 12px;
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-.home-info {
+.card-img-top {
+  border-radius: var(--card-radius);
+  height: 250px;
+  object-fit: cover;
+}
+
+/* --- 4. THE REAL BOARDING PASS TICKET --- */
+.boarding-pass {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  display: flex;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.pass-left {
+  flex: 1;
+  padding: 24px;
+  position: relative;
+  border-right: 2px dashed #d1d1d1;
+}
+
+/* The Notches */
+.pass-left::after, .pass-left::before {
+  content: "";
+  position: absolute;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: inset 2px 0px 4px rgba(0,0,0,0.05);
+  border: 1px solid #e0e0e0;
+  z-index: 10;
+}
+
+.pass-left::after { top: -12px; border-bottom: 2px solid #e0e0e0; }
+.pass-left::before { bottom: -12px; border-top: 2px solid #e0e0e0; }
+
+.pass-right {
+  width: 150px;
+  background: #f8f9fa;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.home-info h3 { margin: 0; font-size: 0.95rem; font-weight: 600; color: var(--airbnb-dark); }
-.home-info p { margin: 2px 0; color: var(--gray-light); font-size: 0.9rem; }
-.price { color: var(--airbnb-dark); font-weight: 600; margin-top: 6px; }
-
-.card-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid #f0f0f0;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-primary { background: var(--airbnb-red); color: white; }
-.btn-primary:hover { background: #d90b3e; }
-.btn-outline { border: 1px solid #222; background: white; color: #222; }
-.btn-outline:hover { background: #f7f7f7; }
-.btn-danger { color: var(--airbnb-red); border: 1px solid var(--airbnb-red); background: white; }
-
-/* FORMS */
-.form-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  box-shadow: var(--shadow-md);
-}
-.form-control { margin-bottom: 1.5rem; }
-.form-control label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.8rem; }
-.form-control input { width: 100%; padding: 1rem; border: 1px solid #b0b0b0; border-radius: 8px; }
-.submit-btn { width: 100%; padding: 1rem; background: var(--airbnb-red); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;}
-
-.centered-message { text-align: center; margin-top: 10vh; }
-.centered-message h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+.pass-label { font-size: 0.75rem; text-transform: uppercase; color: var(--gray); font-weight: 600; }
+.pass-value { font-size: 1.1rem; font-weight: 600; color: var(--dark); }

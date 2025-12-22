@@ -1,14 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include("../partials/head") %>
+<%- include('../partials/head') %>
+</head>
 <body>
-  <%- include("../partials/nav") %>
-  <main class="centered-message">
-    <h1 style="color: var(--airbnb-red); font-size: 4rem;">✓</h1>
-    <h1>Listing Created!</h1>
-    <p>Your home is now live on Airbnb.</p>
-    <br>
-    <a href="/host/host-home-list" class="btn btn-outline">View My Listings</a>
+  <%- include('../partials/nav') %>
+
+  <main class="container d-flex flex-column justify-content-center align-items-center" style="height: 80vh; text-align: center;">
+    
+    <div style="font-size: 5rem; color: #ff385c; line-height: 1;">✓</div>
+    
+    <h1 class="fw-bold mt-3">Listing Created!</h1>
+    <p class="text-muted fs-5">Your home is now live on Airbnb.</p>
+    
+    <div class="mt-4">
+      <a href="/host/host-home-list" class="btn btn-primary btn-lg shadow-sm px-5">View My Listings</a>
+    </div>
+    
   </main>
 </body>
 </html>

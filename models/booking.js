@@ -1,9 +1,10 @@
-const db = require("../utils/databaseUtils");
+const mongodb = require('mongodb');
+const getDb = require("../utils/databaseUtils").getDb;
 
 module.exports = class Booking {
-  constructor(homeId, homeName, startDate, endDate, totalPrice, firstName, lastName, phone, email, guests) {
-    this.homeId = homeId;
-    this.homeName = homeName; // Note: We don't save homeName to DB, we join it in fetchAll
+  constructor(homeId, homeName, startDate, endDate, totalPrice, firstName, lastName, phone, email) {
+    this.homeId = new mongodb.ObjectId(homeId); // Store link to home
+    this.homeName = homeName; // We can duplicate this for easier access in NoSQL
     this.startDate = startDate;
     this.endDate = endDate;
     this.totalPrice = totalPrice;
@@ -14,23 +15,30 @@ module.exports = class Booking {
   }
 
   save() {
-    return db.execute(
-      "INSERT INTO bookings (homeId, firstName, lastName, email, startDate, endDate, totalPrice) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [this.homeId, this.firstName, this.lastName, this.email, this.startDate, this.endDate, this.totalPrice]
-    );
+    const db = getDb();
+    return db.collection("bookings")
+      .insertOne(this)
+      .then(result => console.log("✅ Booking Added"))
+      .catch(err => console.log(err));
   }
 
   static fetchAll() {
-    // JOIN is the magic here. It gets the houseName from the homes table using homeId
-    return db.execute(`
-      SELECT bookings.*, homes.houseName 
-      FROM bookings 
-      JOIN homes ON bookings.homeId = homes.id
-      ORDER BY bookings.startDate DESC
-    `);
+    const db = getDb();
+    // We simple fetch all bookings
+    return db.collection("bookings")
+      .find()
+      .toArray()
+      .then(bookings => {
+        return bookings;
+      })
+      .catch(err => console.log(err));
   }
 
   static deleteById(bookingId) {
-    return db.execute("DELETE FROM bookings WHERE id = ?", [bookingId]);
+    const db = getDb();
+    return db.collection("bookings")
+      .deleteOne({ _id: new mongodb.ObjectId(bookingId) })
+      .then(() => console.log("Booking Deleted"))
+      .catch(err => console.log(err));
   }
 };

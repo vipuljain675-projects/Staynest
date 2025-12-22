@@ -1,78 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include("../partials/head") %>
+<%- include('../partials/head') %>
+</head>
 <body>
-  <%- include("../partials/nav") %>
-  
-  <main>
-    <h1 style="margin-bottom: 2rem;">My Trips</h1>
+  <%- include('../partials/nav') %>
 
-    <% if (bookings.length === 0) { %>
-        <div class="centered-message">
-            <h1>No trips booked... yet!</h1>
-            <p>Time to dust off your bags and start planning your next adventure.</p>
-            <a href="/homes" class="btn btn-outline">Start searching</a>
-        </div>
-    <% } else { %>
-        
-        <div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 800px; margin: 0 auto;">
-            <% bookings.forEach(booking => { %>
+  <main class="container mt-5">
+    <h1 class="mb-5 text-center fw-bold">My Trips</h1>
+    
+    <% if (bookings.length > 0) { %>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <% for (let booking of bookings) { %>
+            <div class="boarding-pass d-flex mb-4 shadow-sm" style="border: 1px solid #ddd; border-radius: 16px; overflow: hidden; background: white;">
+              
+              <div class="p-4 flex-grow-1 position-relative" style="border-right: 2px dashed #ccc;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h3 class="fw-bold text-primary mb-0"><%= booking.homeName %></h3>
+                  <span class="badge bg-success">CONFIRMED</span>
+                </div>
                 
-                <div style="border: 1px solid #ddd; border-radius: 12px; overflow: hidden; display: flex; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                    
-                    <div style="padding: 1.5rem; flex: 1;">
-                        
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <div>
-                                <h2 style="margin: 0 0 0.5rem 0;"><%= booking.houseName %></h2>
-                                <p style="color: #717171; margin-bottom: 1rem; font-size: 0.9rem;">
-                                    Booking ID: #<%= booking.id %> <br>
-                                    Status: <span style="color: green; font-weight: bold;">Confirmed</span>
-                                </p>
-                            </div>
-                            <div style="text-align: right;">
-                                <span style="background: #222; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">
-                                    <%= booking.guests %> Guests
-                                </span>
-                            </div>
-                        </div>
-
-                        <div style="background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
-                            <p style="margin: 0 0 5px 0;"><strong>Guest:</strong> <%= booking.firstName %> <%= booking.lastName %></p>
-                            <p style="margin: 0;"><strong>Contact:</strong> <%= booking.phone %> • <%= booking.email %></p>
-                        </div>
-                        
-                        <div style="display: flex; gap: 2rem; margin-bottom: 1rem;">
-                            <div>
-                                <small style="font-weight: bold; color: #222; font-size: 0.7rem;">CHECK-IN</small>
-                                <div style="color: #717171;"><%= new Date(booking.startDate).toLocaleDateString() %></div>
-                            </div>
-                            <div>
-                                <small style="font-weight: bold; color: #222; font-size: 0.7rem;">CHECK-OUT</small>
-                                <div style="color: #717171;"><%= new Date(booking.endDate).toLocaleDateString() %></div>
-                            </div>
-                        </div>
-
-                        <div style="border-top: 1px solid #eee; padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 1.2rem; font-weight: bold;">Total Bill: ₹<%= booking.totalPrice %></span>
-                            
-                            <form action="/bookings/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this trip?');">
-                                <input type="hidden" name="bookingId" value="<%= booking.id %>">
-                                <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Cancel Trip</button>
-                            </form>
-
-                        </div>
-                    </div>
-
-                    <div style="width: 60px; background: linear-gradient(180deg, #ff385c 0%, #bd1e59 100%); display: flex; align-items: center; justify-content: center;">
-                        <span style="writing-mode: vertical-rl; text-orientation: mixed; font-weight: bold; color: white; letter-spacing: 2px; font-size: 0.9rem;">AIRBNB TICKET</span>
-                    </div>
-
+                <div class="row mt-4">
+                  <div class="col-md-4 col-6 mb-2">
+                    <small class="text-muted text-uppercase" style="font-size: 0.8rem;">Check-In</small>
+                    <p class="fw-bold fs-5 mb-0"><%= booking.startDate %></p>
+                  </div>
+                  <div class="col-md-4 col-6 mb-2">
+                    <small class="text-muted text-uppercase" style="font-size: 0.8rem;">Check-Out</small>
+                    <p class="fw-bold fs-5 mb-0"><%= booking.endDate %></p>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <small class="text-muted text-uppercase" style="font-size: 0.8rem;">Total Paid</small>
+                    <p class="fw-bold fs-4 text-dark mb-0">₹<%= booking.totalPrice %></p>
+                  </div>
                 </div>
 
-            <% }) %>
-        </div>
+                <div style="position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; background: white; border-radius: 50%; border: 1px solid #ddd; border-top: none; border-right: none;"></div>
+                <div style="position: absolute; bottom: -10px; right: -10px; width: 20px; height: 20px; background: white; border-radius: 50%; border: 1px solid #ddd; border-bottom: none; border-right: none;"></div>
+              </div>
 
+              <div class="p-4 bg-light d-flex flex-column align-items-center justify-content-center" style="width: 140px;">
+                <i class="bi bi-qr-code-scan fs-1 text-muted mb-3"></i>
+                <form action="/bookings/delete" method="POST" class="w-100">
+                  <input type="hidden" name="bookingId" value="<%= booking._id %>">
+                  <button type="submit" class="btn btn-outline-danger btn-sm w-100">Cancel</button>
+                </form>
+              </div>
+            </div>
+            <% } %>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="text-center mt-5 pt-5">
+        <div class="display-1 text-muted mb-3">✈️</div>
+        <h2 class="text-muted fw-bold">No trips booked yet!</h2>
+        <a href="/homes" class="btn btn-dark btn-lg px-5 py-3 rounded-pill shadow mt-3">Start Exploring</a>
+      </div>
     <% } %>
   </main>
 </body>

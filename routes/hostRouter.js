@@ -1,20 +1,19 @@
 const express = require("express");
-const router = express.Router();
 const hostController = require("../controllers/hostController");
+const router = express.Router();
 
-// 1. Add Home
+// 1. Add Home (Get Form & Post Data)
 router.get("/add-home", hostController.getAddHome);
 router.post("/add-home", hostController.postAddHome);
 
-// 2. Host Dashboard
+// 2. Host Home List (The Dashboard)
 router.get("/host-home-list", hostController.getHostHomes);
 
-// 3. Edit Home
+// 3. Edit Home (Get Form & Post Data)
 router.get("/edit-home/:homeId", hostController.getEditHome);
-// ✅ NEW: Route to handle the Edit Form submission
 router.post("/edit-home", hostController.postEditHome);
 
-// 4. Delete Home
-router.post("/delete-home", hostController.postDeleteHome);
+// 4. Delete Home (THE MISSING ROUTE 👇)
+router.post("/delete-home/:homeId", hostController.postDeleteHome);
 
-exports.router = router;
+module.exports = { router }; // Note: Ensure your app.js imports this correctly!

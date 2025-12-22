@@ -3,22 +3,17 @@ const Booking = require("../models/booking");
 const Favourite = require("../models/favourite");
 
 exports.getIndex = (req, res, next) => {
-  Home.fetchAll()
-    .then(([registeredHomes]) => {
-      res.render("store/index", {
-        pageTitle: "Airbnb | Holiday Rentals",
-        currentPage: "index",
-        registeredHomes: registeredHomes,
-      });
-    })
-    .catch((err) => console.log(err));
+  res.render("store/index", {
+    pageTitle: "Airbnb | Welcome",
+    currentPage: "index",
+  });
 };
 
 exports.getHomeList = (req, res, next) => {
   Home.fetchAll()
-    .then(([registeredHomes]) => {
+    .then((registeredHomes) => {
       res.render("store/home-list", {
-        pageTitle: "Homes List",
+        pageTitle: "Explore Homes",
         currentPage: "home-list",
         registeredHomes: registeredHomes,
         isSearch: false,
@@ -30,7 +25,7 @@ exports.getHomeList = (req, res, next) => {
 exports.getSearch = (req, res, next) => {
   const query = req.query.query;
   Home.search(query)
-    .then(([searchResults]) => {
+    .then((searchResults) => {
       res.render("store/home-list", {
         pageTitle: `Search results for "${query}"`,
         currentPage: "home-list",
@@ -44,8 +39,7 @@ exports.getSearch = (req, res, next) => {
 exports.getHomeDetails = (req, res, next) => {
   const homeId = req.params.homeId;
   Home.findById(homeId)
-    .then(([homes]) => {
-      const home = homes[0];
+    .then((home) => {
       if (!home) return res.redirect("/homes");
       res.render("store/home-detail", {
         pageTitle: "Home Detail",
@@ -58,11 +52,12 @@ exports.getHomeDetails = (req, res, next) => {
 
 exports.getFavouriteList = (req, res, next) => {
   Favourite.getFavourites()
-    .then(([favRows]) => {
-      const favIds = favRows.map(row => row.homeId);
-      return Home.fetchAll().then(([homes]) => {
-        // IMPORTANT: Ensure ID types match (DB ID is number)
-        const favouriteHomes = homes.filter((home) => favIds.includes(home.id));
+    .then((favourites) => {
+      const favHomeIds = favourites.map(f => f.homeId.toString());
+      Home.fetchAll().then((homes) => {
+        const favouriteHomes = homes.filter(home => 
+          favHomeIds.includes(home._id.toString())
+        );
         res.render("store/favourite-list", {
           pageTitle: "My Favourites",
           currentPage: "favourites",
@@ -89,7 +84,7 @@ exports.postRemoveFavourite = (req, res, next) => {
 
 exports.getBookings = (req, res, next) => {
   Booking.fetchAll()
-    .then(([bookings]) => {
+    .then((bookings) => {
       res.render("store/bookings", {
         pageTitle: "My Bookings",
         currentPage: "bookings",
@@ -102,8 +97,7 @@ exports.getBookings = (req, res, next) => {
 exports.getReserve = (req, res, next) => {
   const homeId = req.params.homeId;
   Home.findById(homeId)
-    .then(([homes]) => {
-      const home = homes[0];
+    .then((home) => {
       if (!home) return res.redirect("/homes");
       res.render("store/reserve", {
         pageTitle: "Confirm Booking",
@@ -116,15 +110,13 @@ exports.getReserve = (req, res, next) => {
 };
 
 exports.postBooking = (req, res, next) => {
-  const { homeId, homeName, pricePerNight, checkIn, checkOut, firstName, lastName, phone, email, guests } = req.body;
-  
-  // Calculate total price
+  const { homeId, homeName, pricePerNight, checkIn, checkOut, firstName, lastName, phone, email } = req.body;
   const date1 = new Date(checkIn);
   const date2 = new Date(checkOut);
   const diffDays = Math.ceil(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24)); 
   const totalPrice = diffDays * pricePerNight;
   
-  const booking = new Booking(homeId, homeName, checkIn, checkOut, totalPrice, firstName, lastName, phone, email, guests);
+  const booking = new Booking(homeId, homeName, checkIn, checkOut, totalPrice, firstName, lastName, phone, email);
   
   booking.save()
     .then(() => res.redirect("/bookings"))

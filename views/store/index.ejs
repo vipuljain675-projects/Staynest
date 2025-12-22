@@ -1,13 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include("../partials/head") %>
+<%- include('../partials/head') %>
+</head>
 <body>
-  <%- include("../partials/nav") %>
-  <main class="centered-message">
-    <h1 style="font-size: 3rem; color: var(--airbnb-red); margin-bottom: 0;">Welcome Home</h1>
-    <p style="font-size: 1.2rem; color: #717171;">Discover over 4 million homes around the world.</p>
-    <br>
-    <a href="/homes" class="btn submit-btn" style="width: auto; padding: 1rem 3rem;">Explore Now</a>
+  <%- include('../partials/nav') %>
+
+  <main>
+    <div class="container-fluid p-0 mb-5">
+      <div class="p-5 text-center bg-light border-bottom" style="background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover; height: 60vh; position: relative;">
+        
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4);"></div>
+        
+        <div class="container py-5 position-relative text-white h-100 d-flex flex-column justify-content-center align-items-center">
+          <h1 class="display-3 fw-bold mb-3">Welcome to Airbnb</h1>
+          <p class="fs-4 mb-4">Find your next stay in unique homes around the world.</p>
+          
+          <a href="/homes" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow fw-bold">
+            Explore Homes
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container text-center mb-5">
+      <h2 class="mb-4">Live anywhere</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=500&q=60" class="img-fluid rounded mb-2" alt="Outdoor" style="height: 200px; width: 100%; object-fit: cover;">
+          <h5>Outdoor getaways</h5>
+        </div>
+        
+        <div class="col-md-4">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=500&q=60" class="img-fluid rounded mb-2" alt="Unique" style="height: 200px; width: 100%; object-fit: cover;">
+          <h5>Unique stays</h5>
+        </div>
+        
+        <div class="col-md-4">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=500&q=60" class="img-fluid rounded mb-2" alt="Entire" style="height: 200px; width: 100%; object-fit: cover;">
+          <h5>Entire homes</h5>
+        </div>
+      </div>
+    </div>
   </main>
 </body>
 </html>

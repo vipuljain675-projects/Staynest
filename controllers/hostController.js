@@ -5,23 +5,18 @@ exports.getAddHome = (req, res, next) => {
     pageTitle: "Add Home",
     currentPage: "addHome",
     editing: false,
+    home: null
   });
 };
 
 exports.getEditHome = (req, res, next) => {
   const homeId = req.params.homeId;
   const editing = req.query.editing === "true";
-
-  if (!editing) {
-    return res.redirect("/host/host-home-list");
-  }
+  if (!editing) return res.redirect("/host/host-home-list");
 
   Home.findById(homeId)
-    .then(([homes]) => {
-      const home = homes[0];
-      if (!home) {
-        return res.redirect("/");
-      }
+    .then((home) => {
+      if (!home) return res.redirect("/");
       res.render("host/edit-home", {
         pageTitle: "Edit Home",
         currentPage: "host-homes",
@@ -33,66 +28,42 @@ exports.getEditHome = (req, res, next) => {
 };
 
 exports.postAddHome = (req, res, next) => {
-  // 1. We extract all fields, including description
-  const { houseName, rating, price, location, photoUrl, description } = req.body;
-  
-  // 2. SAFETY CHECK: If description is undefined, use an empty string ""
-  // This prevents the "Bind parameters cannot be undefined" crash
-  const validDescription = description || ""; 
-
-  const home = new Home(houseName, price, location, rating, photoUrl, validDescription);
+  const { houseName, price, location, rating, photoUrl, description } = req.body;
+  const home = new Home(houseName, price, location, rating, photoUrl, description);
   
   home.save()
     .then(() => {
+      // 👇 CHANGED: Show the "Success Page" instead of redirecting
       res.render("host/home-added", {
-        pageTitle: "Success",
-        currentPage: "addHome",
+        pageTitle: "Listing Created",
+        currentPage: "addHome"
       });
     })
-    .catch((err) => {
-      console.log("Error saving home:", err);
-      res.redirect("/host/add-home"); // Redirect back on error
-    });
+    .catch((err) => console.log(err));
 };
 
 exports.postEditHome = (req, res, next) => {
   const { id, houseName, price, location, rating, photoUrl, description } = req.body;
-  
-  // Safety check for edit as well
-  const validDescription = description || "";
-
-  const updatedHomeData = { 
-    houseName, 
-    price, 
-    location, 
-    rating, 
-    photoUrl, 
-    description: validDescription 
-  };
-  
-  Home.updateById(id, updatedHomeData)
-    .then(() => {
-      res.redirect("/host/host-home-list");
-    })
-    .catch((err) => console.log("Error updating home:", err));
+  const home = new Home(houseName, price, location, rating, photoUrl, description, id);
+  home.save()
+    .then(() => res.redirect("/host/host-home-list"))
+    .catch((err) => console.log(err));
 };
 
 exports.postDeleteHome = (req, res, next) => {
-  const homeId = req.body.homeId;
+  const homeId = req.params.homeId;
   Home.deleteById(homeId)
-    .then(() => {
-      res.redirect("/host/host-home-list");
-    })
-    .catch((err) => console.log("Error deleting home:", err));
+    .then(() => res.redirect("/host/host-home-list"))
+    .catch((err) => console.log(err));
 };
 
 exports.getHostHomes = (req, res, next) => {
   Home.fetchAll()
-    .then(([registeredHomes]) => {
+    .then((homes) => {
       res.render("host/host-home-list", {
-        registeredHomes: registeredHomes,
-        pageTitle: "Host Dashboard",
+        pageTitle: "Host Homes",
         currentPage: "host-homes",
+        homes: homes,
       });
     })
     .catch((err) => console.log(err));
