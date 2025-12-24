@@ -1,49 +1,59 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
-  <div class="container py-2">
-    <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="/" style="color: #ff385c !important;">
-      <i class="bi bi-house-heart-fill me-2 fs-1"></i> 
-      airbnb
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+  <div class="container">
+    
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <i class="fa-brands fa-airbnb text-danger fa-2x me-2"></i>
+      <span class="text-danger fw-bold">airbnb</span>
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <div class="d-none d-md-block flex-grow-1 mx-5">
+      <div class="input-group shadow-sm border rounded-pill overflow-hidden">
+        <input type="text" class="form-control border-0 shadow-none ps-4" placeholder="Search destinations">
+        <button class="btn btn-danger rounded-circle m-1 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;" type="button">
+          <i class="fa-solid fa-magnifying-glass text-white" style="font-size: 0.8rem;"></i>
+        </button>
+      </div>
+    </div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-      <form class="d-flex w-50" role="search" action="/search" method="GET">
-        <div class="input-group shadow-sm rounded-pill overflow-hidden border">
-          <input class="form-control border-0 shadow-none ps-4" type="search" placeholder="Search destinations" name="query">
-          <button class="btn rounded-circle m-1 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; background-color: #ff385c; border: none;" type="submit">
-            <i class="bi bi-search text-white" style="font-size: 0.8rem;"></i>
-          </button>
-        </div>
-      </form>
-      
-      <ul class="navbar-nav ms-auto align-items-center mt-3 mt-lg-0">
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         
         <li class="nav-item">
-          <a class="nav-link fw-bold text-dark d-flex align-items-center" href="/homes">
-            <i class="bi bi-house-door-fill me-2 fs-5" style="color: #717171;"></i> Homes
-          </a>
+          <a class="nav-link fw-semibold text-dark" href="/">Homes</a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link fw-bold text-dark d-flex align-items-center" href="/bookings">
-            <i class="bi bi-suitcase-lg-fill me-2 fs-5" style="color: #717171;"></i> Trips
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-bold text-dark d-flex align-items-center" href="/favourites">
-            <i class="bi bi-heart-fill me-2 fs-5" style="color: #717171;"></i> Saved
-          </a>
-        </li>
-        <li class="nav-item ms-lg-3">
-          <a class="btn btn-light rounded-pill border px-3 hover-shadow fw-bold" href="/host/host-home-list">
-            Switch to Host
-          </a>
-        </li>
+        <% if (isAuthenticated) { %>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-dark" href="/bookings">Trips</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-dark" href="/favourite-list">Saved</a>
+          </li>
+          <li class="nav-item ms-2">
+            <form action="/logout" method="POST">
+              <button class="btn btn-outline-danger btn-sm rounded-pill px-3" type="submit">Logout</button>
+            </form>
+          </li>
+          <li class="nav-item ms-2">
+             <a class="btn btn-light rounded-pill border px-3 fw-semibold" href="/host/add-home">Switch to Host</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-dark" href="/login">Log in</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-dark rounded-pill px-3" href="/signup">Sign up</a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-light rounded-pill border px-3 fw-semibold" href="/host/add-home">Switch to Host</a>
+          </li>
+        <% } %>
+
       </ul>
     </div>
   </div>
 </nav>
-<div style="height: 80px;"></div>

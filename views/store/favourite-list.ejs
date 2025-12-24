@@ -1,23 +1,23 @@
 <%- include('../partials/head') %>
-</head>
 <body>
   <%- include('../partials/nav') %>
 
-  <main class="container mt-4">
-    <h1>My Favourites</h1>
-    <div class="row mt-4">
+  <main class="container my-4">
+    <h2 class="mb-4">My Favourites</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <% if (favouriteHomes.length > 0) { %>
         <% for (let home of favouriteHomes) { %>
-          <div class="col-md-4 mb-4">
+          <div class="col">
             <div class="card h-100">
-              <img src="<%= home.photoUrl %>" class="card-img-top" alt="<%= home.houseName %>">
+              <img src="<%= home.imageUrl %>" class="card-img-top" alt="<%= home.houseName %>" style="height: 200px; object-fit: cover;">
               <div class="card-body">
                 <h5 class="card-title"><%= home.houseName %></h5>
                 <p class="card-text"><%= home.location %></p>
-                <div class="d-flex justify-content-between align-items-center">
+                
+                <div class="d-flex justify-content-between">
                   <a href="/homes/<%= home._id %>" class="btn btn-primary">View</a>
                   
-                  <form action="/favourites/delete" method="POST">
+                  <form action="/favourite-remove" method="POST">
                     <input type="hidden" name="homeId" value="<%= home._id %>">
                     <button type="submit" class="btn btn-danger">Remove</button>
                   </form>
@@ -27,8 +27,8 @@
           </div>
         <% } %>
       <% } else { %>
-        <div class="text-center w-100">
-          <h3>No favourites added yet.</h3>
+        <div class="col-12">
+            <p>You have no favourite homes yet.</p>
         </div>
       <% } %>
     </div>

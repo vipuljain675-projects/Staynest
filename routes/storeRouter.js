@@ -3,27 +3,24 @@ const express = require("express");
 const storeController = require("../controllers/storeController");
 const router = express.Router();
 
-// 1. Landing Page (The "Welcome" Screen)
+// --- Home Routes ---
 router.get("/", storeController.getIndex);
-
-// 2. The Actual Homes List (The Grid)
 router.get("/homes", storeController.getHomeList);
-
-// 3. Search & Details
-router.get("/search", storeController.getSearch);
 router.get("/homes/:homeId", storeController.getHomeDetails);
 
-// 4. Bookings
-router.get("/bookings", storeController.getBookings);
-router.post("/bookings", storeController.postBooking);
+// --- Favourites ---
+router.get("/favourite-list", storeController.getFavouriteList);
+router.post("/favourite", storeController.postAddToFavourite);
+router.post("/favourite-remove", storeController.postRemoveFavourite);
+
+// --- Bookings (THIS IS THE KEY PART) ---
+// If this line is missing or not saved, you get a 404
+router.get("/bookings", storeController.getBookings); 
+router.post("/book", storeController.postBooking);
 router.post("/bookings/delete", storeController.postCancelBooking);
 
-// 5. Reserve Page
+// --- Search & Reserve ---
 router.get("/reserve/:homeId", storeController.getReserve);
-
-// 6. Favourites
-router.get("/favourites", storeController.getFavouriteList);
-router.post("/favourites/add", storeController.postAddToFavourite);
-router.post("/favourites/delete", storeController.postRemoveFavourite);
+router.get("/search", storeController.getSearch);
 
 module.exports = router;

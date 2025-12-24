@@ -1,0 +1,50 @@
+<%- include('../partials/head') %>
+</head>
+<body class="bg-light">
+  <%- include('../partials/nav') %>
+
+  <main class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body p-5">
+            <h2 class="text-center fw-bold mb-4 text-primary">Create Account</h2>
+            
+            <form action="/signup" method="POST">
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label fw-bold small text-muted">First Name</label>
+                  <input type="text" name="firstName" class="form-control p-3 bg-light border-0" required>
+                </div>
+                <div class="col">
+                  <label class="form-label fw-bold small text-muted">Last Name</label>
+                  <input type="text" name="lastName" class="form-control p-3 bg-light border-0" required>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold small text-muted">Email Address</label>
+                <input type="email" name="email" class="form-control p-3 bg-light border-0" required>
+              </div>
+              
+              <div class="mb-4">
+                <label class="form-label fw-bold small text-muted">Password</label>
+                <input type="password" name="password" class="form-control p-3 bg-light border-0" required>
+              </div>
+
+              <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg fw-bold py-3 rounded-3">Sign Up</button>
+              </div>
+              
+              <div class="text-center">
+                <span class="text-muted">Already have an account?</span> 
+                <a href="/login" class="text-decoration-none fw-bold">Log in</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

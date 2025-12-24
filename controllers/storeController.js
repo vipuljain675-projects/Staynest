@@ -11,11 +11,11 @@ exports.getIndex = (req, res, next) => {
 
 exports.getHomeList = (req, res, next) => {
   Home.find()
-    .then((registeredHomes) => {
+    .then((homes) => {
       res.render("store/home-list", {
         pageTitle: "Explore Homes",
         currentPage: "home-list",
-        registeredHomes: registeredHomes,
+        homes: homes, // FIX: Renamed from 'registeredHomes' to 'homes'
         isSearch: false,
       });
     })
@@ -34,7 +34,7 @@ exports.getSearch = (req, res, next) => {
       res.render("store/home-list", {
         pageTitle: `Search results for "${query}"`,
         currentPage: "home-list",
-        registeredHomes: searchResults,
+        homes: searchResults, // FIX: Renamed from 'registeredHomes' to 'homes'
         isSearch: true,
       });
     })
@@ -55,14 +55,10 @@ exports.getHomeDetails = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// 👇 THIS IS THE CRITICAL FIX FOR THE CRASH
 exports.getFavouriteList = (req, res, next) => {
   Favourite.find()
-    .populate('homeId') // 1. Get the full Home details
+    .populate('homeId')
     .then((favourites) => {
-      
-      // 2. defensive coding: Filter out nulls
-      // If a home was deleted, 'fav.homeId' will be null. We remove it so the view doesn't crash.
       const favouriteHomes = favourites
         .map(fav => fav.homeId)
         .filter(home => home !== null);
@@ -81,14 +77,14 @@ exports.postAddToFavourite = (req, res, next) => {
   const fav = new Favourite({ homeId: homeId });
   
   fav.save()
-    .then(() => res.redirect("/favourites"))
+    .then(() => res.redirect("/favourite-list"))
     .catch((err) => console.log(err));
 };
 
 exports.postRemoveFavourite = (req, res, next) => {
   const homeId = req.body.homeId;
   Favourite.findOneAndDelete({ homeId: homeId })
-    .then(() => res.redirect("/favourites"))
+    .then(() => res.redirect("/favourite-list"))
     .catch((err) => console.log(err));
 };
 
@@ -121,7 +117,6 @@ exports.getReserve = (req, res, next) => {
 exports.postBooking = (req, res, next) => {
   const { homeId, homeName, pricePerNight, checkIn, checkOut, firstName, lastName, phone, email } = req.body;
   
-  // Calculate Total Price
   const date1 = new Date(checkIn);
   const date2 = new Date(checkOut);
   const diffDays = Math.ceil(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24)); 

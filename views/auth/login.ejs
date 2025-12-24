@@ -1,0 +1,39 @@
+<%- include('../partials/head') %>
+</head>
+<body class="bg-light">
+  <%- include('../partials/nav') %>
+
+  <main class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body p-5">
+            <h2 class="text-center fw-bold mb-4 text-primary">Welcome Back</h2>
+            
+            <form action="/login" method="POST">
+              <div class="mb-3">
+                <label class="form-label fw-bold small text-muted">Email Address</label>
+                <input type="email" name="email" class="form-control p-3 bg-light border-0" placeholder="name@example.com" required>
+              </div>
+              
+              <div class="mb-4">
+                <label class="form-label fw-bold small text-muted">Password</label>
+                <input type="password" name="password" class="form-control p-3 bg-light border-0" placeholder="••••••••" required>
+              </div>
+
+              <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg fw-bold py-3 rounded-3">Log In</button>
+              </div>
+              
+              <div class="text-center">
+                <span class="text-muted">New here?</span> 
+                <a href="/signup" class="text-decoration-none fw-bold">Create an account</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

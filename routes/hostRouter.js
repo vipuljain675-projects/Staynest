@@ -18,8 +18,6 @@ const upload = multer({ storage: storage });
 
 // Routes
 router.get("/add-home", hostController.getAddHome);
-
-// 👇 CRITICAL: "photos" must match the EJS input name
 router.post("/add-home", upload.array("photos", 3), hostController.postAddHome);
 
 router.get("/host-home-list", hostController.getHostHomes);
@@ -29,4 +27,4 @@ router.post("/edit-home", upload.array("photos", 3), hostController.postEditHome
 
 router.post("/delete-home/:homeId", hostController.postDeleteHome);
 
-module.exports = { router };
+module.exports = router;
