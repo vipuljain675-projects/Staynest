@@ -18,8 +18,13 @@
 
             <div class="card-body">
               <h5 class="fw-bold"><%= home.houseName %></h5>
-              <p class="text-muted mb-1"><%= home.location %></p>
-              <p class="mb-2">₹<%= home.price %> / night</p>
+             <p class="text-muted mb-1"><%= home.location %></p>
+
+<div class="d-flex align-items-center gap-1 mb-1">
+  <span class="fw-semibold">⭐ <%= home.rating.toFixed(1) %></span>
+</div>
+
+<p class="mb-2">₹<%= home.price %> / night</p>
 
               <div class="d-flex justify-content-between">
                 <a href="/homes/<%= home._id %>" class="btn btn-outline-primary btn-sm">

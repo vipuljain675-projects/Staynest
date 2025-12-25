@@ -1,110 +1,90 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
-  <div class="container">
+<nav class="navbar bg-white border-bottom sticky-top">
+  <div class="container-fluid px-4 d-flex align-items-center gap-4">
 
-    <!-- Logo -->
-    <a class="navbar-brand d-flex align-items-center" href="/">
-      <span class="text-danger fw-bold fs-4">airbnb</span>
-    </a>
+  <!-- AIRBNB LOGO (OFFICIAL BELO STYLE) -->
+<a href="/" class="airbnb-logo d-flex align-items-center gap-1">
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 1000 1000"
+    aria-hidden="true"
+    style="display:block"
+  >
+    <path
+      fill="#FF385C"
+      d="M500 130c-106 0-192 86-192 192 0 163 192 415 192 415s192-252 192-415c0-106-86-192-192-192zm0 260c-38 0-68-30-68-68s30-68 68-68 68 30 68 68-30 68-68 68z"
+    />
+  </svg>
 
-    <!-- Search Bar (UI only for now) -->
-    <div class="d-none d-md-block flex-grow-1 mx-5">
+  <span class="airbnb-text">airbnb</span>
+</a>
+
+
+    <!-- SEARCH (ALWAYS VISIBLE) -->
+<form action="/search" method="GET" class="flex-grow-1" style="max-width: 460px;">
       <div class="input-group shadow-sm border rounded-pill overflow-hidden">
         <input
           type="text"
+          name="q"
           class="form-control border-0 shadow-none ps-4"
           placeholder="Search destinations"
+          required
         >
-        <button
-          class="btn btn-danger rounded-circle m-1 d-flex align-items-center justify-content-center"
-          style="width: 36px; height: 36px;"
-          type="button"
-        >
-          <i class="bi bi-search text-white"></i>
-        </button>
+       <button
+  class="btn btn-danger rounded-circle m-1"
+  style="width:34px;height:34px;"
+  type="submit"
+>
+
       </div>
-    </div>
+    </form>
 
-    <!-- Mobile Toggle -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarContent"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <!-- RIGHT ACTIONS -->
+    <div class="d-flex align-items-center gap-3">
 
-    <!-- Right Side -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-      <ul class="navbar-nav align-items-center gap-2">
+      <a href="/homes" class="fw-semibold text-dark text-decoration-none">
+        Homes
+      </a>
 
-        <!-- Always Visible -->
-        <li class="nav-item">
-          <a class="nav-link fw-semibold" href="/homes">Homes</a>
-        </li>
+      <% if (isAuthenticated) { %>
 
-        <% if (isAuthenticated) { %>
+        <a href="/bookings" class="fw-semibold text-dark text-decoration-none">
+          Trips
+        </a>
 
-          <!-- Logged-in Links -->
-          <li class="nav-item">
-            <a class="nav-link fw-semibold" href="/bookings">Trips</a>
-          </li>
+        <a href="/favourite-list" class="fw-semibold text-dark text-decoration-none">
+          Saved
+        </a>
 
-          <li class="nav-item">
-            <a class="nav-link fw-semibold" href="/favourite-list">Saved</a>
-          </li>
+        <a href="/host"
+           class="btn btn-light border rounded-pill px-3 fw-semibold">
+          Switch to Host
+        </a>
 
-          <!-- Switch to Host (SMART ENTRY POINT) -->
-          <li class="nav-item">
-            <a
-              href="/host"
-              class="btn btn-light rounded-pill border px-3 fw-semibold"
-            >
-              Switch to Host
-            </a>
-          </li>
+        <form action="/logout" method="POST" class="m-0">
+          <button class="btn btn-outline-danger btn-sm rounded-pill px-3">
+            Logout
+          </button>
+        </form>
 
-          <!-- Logout -->
-          <li class="nav-item">
-            <form action="/logout" method="POST">
-              <button
-                class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                type="submit"
-              >
-                Logout
-              </button>
-            </form>
-          </li>
+      <% } else { %>
 
-        <% } else { %>
+        <a href="/login" class="fw-semibold text-dark text-decoration-none">
+          Log in
+        </a>
 
-          <!-- Logged-out Links -->
-          <li class="nav-item">
-            <a class="nav-link fw-semibold" href="/login">Log in</a>
-          </li>
+        <a href="/signup"
+           class="btn btn-dark rounded-pill px-3 fw-semibold">
+          Sign up
+        </a>
 
-          <li class="nav-item">
-            <a
-              class="btn btn-dark rounded-pill px-3 fw-semibold"
-              href="/signup"
-            >
-              Sign up
-            </a>
-          </li>
+        <a href="/host"
+           class="btn btn-light border rounded-pill px-3 fw-semibold">
+          Switch to Host
+        </a>
 
-          <!-- Allow switching to host even if logged out -->
-          <li class="nav-item">
-            <a
-              href="/host"
-              class="btn btn-light rounded-pill border px-3 fw-semibold"
-            >
-              Switch to Host
-            </a>
-          </li>
+      <% } %>
 
-        <% } %>
-
-      </ul>
     </div>
 
   </div>

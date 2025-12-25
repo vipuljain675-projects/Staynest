@@ -2,11 +2,30 @@
 <body>
 <%- include('../partials/nav') %>
 
-<main class="container mt-5 text-center">
-  <h1 class="fw-bold mb-3">Welcome to Airbnb</h1>
-  <p class="text-muted mb-4">Find your next stay</p>
-  <a href="/homes" class="btn btn-primary btn-lg">Explore Homes</a>
-</main>
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content text-center text-white">
+    <h1 class="fw-bold display-5">Welcome to Airbnb</h1>
+    <p class="lead mb-4">Find your next stay</p>
+
+    <!-- FLOATING SEARCH -->
+    <form action="/search" method="GET" class="hero-search">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search destinations"
+        required
+      />
+      <button type="submit">Search</button>
+    </form>
+
+    <a href="/homes" class="btn btn-primary mt-4 px-4">
+      Explore Homes
+    </a>
+  </div>
+</section>
 
 </body>
 </html>

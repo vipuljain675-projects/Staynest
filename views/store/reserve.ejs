@@ -1,35 +1,51 @@
 <%- include('../partials/head') %>
-<body>
+<body class="bg-light">
 <%- include('../partials/nav') %>
 
 <main class="container mt-5">
-  <h2 class="mb-4">Confirm Booking</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
 
-  <form action="/bookings" method="POST">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
 
-    <input type="hidden" name="homeId" value="<%= home._id %>">
-    <input type="hidden" name="homeName" value="<%= home.houseName %>">
-    <input type="hidden" name="pricePerNight" value="<%= home.price %>">
+          <h3 class="fw-bold mb-4">Confirm your booking</h3>
 
-    <div class="row mb-3">
-      <div class="col">
-        <label>Check In</label>
-        <input type="date" name="checkIn" class="form-control" required>
-      </div>
-      <div class="col">
-        <label>Check Out</label>
-        <input type="date" name="checkOut" class="form-control" required>
-      </div>
+ <form action="/bookings" method="POST">
+
+  <input type="hidden" name="homeId" value="<%= home._id %>">
+  <input type="hidden" name="homeName" value="<%= home.houseName %>">
+  <input type="hidden" name="pricePerNight" value="<%= home.price %>">
+
+  <div class="row mb-3">
+    <div class="col">
+      <label>Check in</label>
+      <input type="date" name="checkIn" class="form-control" required>
     </div>
+    <div class="col">
+      <label>Check out</label>
+      <input type="date" name="checkOut" class="form-control" required>
+    </div>
+  </div>
 
-    <input name="firstName" class="form-control mb-2" placeholder="First Name" required>
-    <input name="lastName" class="form-control mb-2" placeholder="Last Name" required>
-    <input name="phone" class="form-control mb-2" placeholder="Phone" required>
-    <input name="email" type="email" class="form-control mb-3" placeholder="Email" required>
+  <input type="text" name="firstName" class="form-control mb-2" placeholder="First name" required>
+  <input type="text" name="lastName" class="form-control mb-2" placeholder="Last name" required>
+  <input type="text" name="phone" class="form-control mb-2" placeholder="Phone" required>
+  <input type="email" name="email" class="form-control mb-3" placeholder="Email" required>
 
-    <button class="btn btn-primary">Confirm Booking</button>
-  </form>
+  <button class="btn btn-primary w-100">
+    Confirm Booking
+  </button>
+
+</form>
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
 </main>
-
 </body>
 </html>

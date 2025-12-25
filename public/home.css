@@ -1,4 +1,6 @@
-/* --- 1. FONTS & GLOBALS (YOUR ORIGINAL) --- */
+/* =========================================================
+   1. GLOBALS & FONTS
+========================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
@@ -9,13 +11,135 @@
   --card-radius: 12px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
+  margin: 0;
   font-family: 'Poppins', sans-serif !important;
   color: var(--dark);
   background-color: #fff;
 }
 
-/* --- 2. THE AIRBNB RED BUTTONS (YOUR ORIGINAL) --- */
+
+/* =========================================================
+   2. NAVBAR (FLOATING, CLEAN)
+========================================================= */
+.navbar {
+  height: 72px;
+  background: white;
+  z-index: 1000;
+}
+
+.navbar a {
+  font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   3. AIRBNB LOGO (NO HUT, NO CIRCLE)
+========================================================= */
+.airbnb-logo {
+  text-decoration: none;
+}
+
+.airbnb-belo {
+  width: 30px;
+  height: 30px;
+  fill: var(--airbnb-red);
+}
+
+.airbnb-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--airbnb-red);
+  letter-spacing: -0.4px;
+}
+
+
+/* =========================================================
+   4. HERO SECTION (FULL SCREEN – NO WHITE GAP)
+========================================================= */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  background-image: url("/images/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* Centered content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 72px; /* compensates navbar height */
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.hero-content p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+
+/* =========================================================
+   5. FLOATING SEARCH BAR (HERO)
+========================================================= */
+.hero-search {
+  background: white;
+  border-radius: 999px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  margin-top: 24px;
+}
+
+.hero-search input {
+  border: none;
+  outline: none;
+  padding: 12px 20px;
+  border-radius: 999px;
+  flex: 1;
+  font-size: 1rem;
+}
+
+.hero-search button {
+  background: var(--airbnb-red);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.hero-search button:hover {
+  background: var(--airbnb-hover);
+}
+
+
+/* =========================================================
+   6. BUTTONS (AIRBNB RED)
+========================================================= */
 .btn-primary {
   background-color: var(--airbnb-red) !important;
   border-color: var(--airbnb-red) !important;
@@ -24,7 +148,7 @@ body {
   border-radius: 8px;
 }
 
-.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+.btn-primary:hover {
   background-color: var(--airbnb-hover) !important;
   border-color: var(--airbnb-hover) !important;
 }
@@ -40,7 +164,10 @@ body {
   color: white !important;
 }
 
-/* --- 3. CARDS (YOUR ORIGINAL) --- */
+
+/* =========================================================
+   7. CARDS (HOME LISTING)
+========================================================= */
 .card {
   border: none !important;
   border-radius: var(--card-radius) !important;
@@ -58,7 +185,10 @@ body {
   object-fit: cover;
 }
 
-/* --- 4. THE REAL BOARDING PASS TICKET (YOUR ORIGINAL) --- */
+
+/* =========================================================
+   8. BOARDING PASS (BOOKINGS UI)
+========================================================= */
 .boarding-pass {
   background: white;
   border-radius: 16px;
@@ -77,8 +207,8 @@ body {
   border-right: 2px dashed #d1d1d1;
 }
 
-/* The Notches */
-.pass-left::after, .pass-left::before {
+.pass-left::after,
+.pass-left::before {
   content: "";
   position: absolute;
   right: -10px;
@@ -86,13 +216,16 @@ body {
   height: 20px;
   background-color: #fff;
   border-radius: 50%;
-  box-shadow: inset 2px 0px 4px rgba(0,0,0,0.05);
   border: 1px solid #e0e0e0;
-  z-index: 10;
 }
 
-.pass-left::after { top: -12px; border-bottom: 2px solid #e0e0e0; }
-.pass-left::before { bottom: -12px; border-top: 2px solid #e0e0e0; }
+.pass-left::after {
+  top: -12px;
+}
+
+.pass-left::before {
+  bottom: -12px;
+}
 
 .pass-right {
   width: 150px;
@@ -101,14 +234,24 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
 }
 
-.pass-label { font-size: 0.75rem; text-transform: uppercase; color: var(--gray); font-weight: 600; }
-.pass-value { font-size: 1.1rem; font-weight: 600; color: var(--dark); }
+.pass-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--gray);
+  font-weight: 600;
+}
+
+.pass-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
 
 
-/* --- 5. 👇 NEW: SEXY UPLOAD BUTTON STYLES --- */
+/* =========================================================
+   9. IMAGE UPLOAD PREVIEW
+========================================================= */
 #imagePreview {
   background-color: #f8f9fa;
   cursor: pointer;
@@ -116,21 +259,11 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Hover effect: Turns border red and slightly scales up */
 #imagePreview:hover {
-  background-color: #fff !important;
-  border-color: var(--airbnb-red) !important;
-  background-image: repeating-linear-gradient(
-    45deg,
-    #fff,
-    #fff 10px,
-    #fafafa 10px,
-    #fafafa 20px
-  );
+  border-color: var(--airbnb-red);
   transform: scale(1.01);
 }
 
-/* Animation for when the image appears */
 #imagePreview img {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -140,9 +273,31 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* --- 6. 👇 NEW: MAP STYLES --- */
+
+/* =========================================================
+   10. MAP
+========================================================= */
 #map {
-  border-radius: 16px; 
+  border-radius: 16px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+
+/* =========================================================
+   11. MOBILE FIXES
+========================================================= */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-search {
+    flex-direction: column;
+    border-radius: 20px;
+  }
+
+  .hero-search button {
+    width: 100%;
+  }
 }
