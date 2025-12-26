@@ -183,14 +183,16 @@ exports.postBooking = (req, res, next) => {
   })
   .then(existingBookings => {
     if (existingBookings.length > 0) {
-      return res.render("store/booking-failed", {
+      // 🛑 STOPPER: If dates are busy, render error and return NULL
+      res.render("store/booking-failed", {
         pageTitle: "Dates Unavailable",
         currentPage: "bookings",
         homeId: homeId
       });
+      return null; 
     }
 
-    // 2. SAVE BOOKING
+    // 2. SAVE BOOKING (Only runs if dates are free)
     return Home.findById(homeId).then(home => {
         const differenceInTime = newCheckOut.getTime() - newCheckIn.getTime();
         const nights = Math.ceil(differenceInTime / (1000 * 3600 * 24)); 
@@ -204,7 +206,6 @@ exports.postBooking = (req, res, next) => {
           homeName: home.houseName,
           totalPrice: totalPrice,
           price: home.price,
-          // 🟢 SAVE GUESTS
           guests: {
             adults: parseInt(adults) || 1,
             children: parseInt(children) || 0,
@@ -215,14 +216,15 @@ exports.postBooking = (req, res, next) => {
         return newBooking.save();
     });
   })
-  .then(() => {
-      // 🟢 3. REDIRECT TO "MY TRIPS" PAGE
-      // This takes the user to the list where the new Boarding Pass will be visible
-      res.redirect("/bookings");
+  .then((savedBooking) => {
+      // 🟢 SAFETY CHECK: Only redirect if we actually saved a booking
+      // If 'savedBooking' is null (because of collision), we do nothing.
+      if (savedBooking) {
+          res.redirect("/bookings");
+      }
   })
   .catch(err => console.log(err));
 };
-
 exports.postCancelBooking = (req, res) => {
   Booking.findByIdAndDelete(req.body.bookingId)
     .then(() => res.redirect("/bookings"))

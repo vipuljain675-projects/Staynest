@@ -7,7 +7,7 @@
   <div class="mb-4">
     <h1 class="fw-bold mb-2"><% if(editing) { %>Edit your Listing<% } else { %>Add a New Home<% } %></h1>
     <p class="text-muted d-flex align-items-center gap-2">
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block;height:16px;width:16px;fill:currentColor"><path d="M16 .7c-8.437 0-15.3 6.863-15.3 15.3s6.863 15.3 15.3 15.3 15.3-6.863 15.3-15.3-6.863-15.3-15.3-15.3zm0 28c-4.021 0-7.605-1.884-9.933-4.81a12.425 12.425 0 0 1 6.451-4.4 6.507 6.507 0 0 1 -3.018-5.49c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5a6.513 6.513 0 0 1 -3.019 5.491 12.42 12.42 0 0 1 6.452 4.4c-2.328 2.925-5.912 4.809-9.933 4.809z"></path></svg>
+        <i class="bi bi-person-circle"></i>
         Hosted by <strong><%= user.firstName %> <%= user.lastName %></strong>
     </p>
   </div>
@@ -40,6 +40,7 @@
                     <label class="form-label fw-bold small">Location</label>
                     <input type="text" class="form-control p-3 rounded-3" name="location" placeholder="e.g. Goa, India" value="<% if(editing) { %><%= home.location %><% } %>" required>
                 </div>
+                
                 <div class="col-12">
                    <label class="form-label fw-bold small">Availability Window</label>
                    <div class="input-group">
@@ -53,6 +54,28 @@
                    </div>
                    <div class="form-text small text-muted">Guests can only book within this range.</div>
                 </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-bold small">Description</label>
+                    <textarea name="description" class="form-control bg-light border-0 rounded-3" rows="4" placeholder="Describe the vibe of your place..." required><% if(editing) { %><%= home.description %><% } %></textarea>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <label class="form-label fw-bold small">Amenities</label>
+                    <div class="row row-cols-2 g-2">
+                        <% const amenitiesList = ['Wifi', 'AC', 'Pool', 'TV', 'Kitchen', 'Gym']; %>
+                        <% amenitiesList.forEach(item => { %>
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="amenities" value="<%= item %>" id="<%= item %>" 
+                                    <% if(editing && home.amenities && home.amenities.includes(item)) { %>checked<% } %>>
+                                    <label class="form-check-label small" for="<%= item %>"><%= item %></label>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+
             </div>
         </div>
       </div>
@@ -76,10 +99,11 @@
                 </svg>
                 <h6 class="fw-bold mb-1">Click or Drag photos here</h6>
                 <span class="text-muted small">Support for JPG, PNG (Max 5 total)</span>
+                
                 <input type="file" id="fileInput" name="photos" class="d-none" multiple accept="image/*">
             </label>
-
-            <div class="image-preview-grid" id="previewContainer"></div>
+            
+            <div class="image-preview-grid mt-3 d-flex flex-wrap gap-2" id="previewContainer"></div>
             <div id="fileCount" class="text-muted small mt-2 text-end"></div>
         </div>
       </div>
@@ -95,15 +119,14 @@
 </main>
 
 <script>
+// 🟢 YOUR ORIGINAL JS LOGIC RESTORED
 const fileInput = document.getElementById('fileInput');
 const previewContainer = document.getElementById('previewContainer');
 const dragArea = document.querySelector('.drag-drop-area');
 const fileCountDisplay = document.getElementById('fileCount');
 
-// 1. The Master List of all selected files
 let accumulatedFiles = [];
 
-// Drag and Drop visual effects
 ['dragenter', 'dragover'].forEach(eventName => {
   dragArea.addEventListener(eventName, (e) => {
       e.preventDefault(); e.stopPropagation();
@@ -120,7 +143,6 @@ let accumulatedFiles = [];
   }, false);
 });
 
-// 2. Main function to handle incoming files
 function handleNewFiles(newFilesList) {
     const newFilesArray = Array.from(newFilesList);
     const validImages = newFilesArray.filter(file => file.type.startsWith('image/'));
@@ -130,15 +152,11 @@ function handleNewFiles(newFilesList) {
         return; 
     }
 
-    // Add new valid images to master list
     accumulatedFiles = [...accumulatedFiles, ...validImages];
-
-    // Update UI and Hidden Input
     updatePreviews();
     updateHiddenInput();
 }
 
-// 3. Render the previews
 function updatePreviews() {
     previewContainer.innerHTML = '';
     fileCountDisplay.textContent = accumulatedFiles.length > 0 ? `${accumulatedFiles.length} / 5 photos selected` : '';
@@ -148,25 +166,24 @@ function updatePreviews() {
         reader.onload = (e) => {
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.classList.add('preview-thumb');
+            img.classList.add('rounded-3');
+            img.style.width = '70px';
+            img.style.height = '70px';
+            img.style.objectFit = 'cover';
             previewContainer.appendChild(img);
         };
         reader.readAsDataURL(file);
     });
 }
 
-// 4. THE MAGIC TRICK: Sync master list back to the hidden HTML input
 function updateHiddenInput() {
     const dataTransfer = new DataTransfer();
     accumulatedFiles.forEach(file => dataTransfer.items.add(file));
     fileInput.files = dataTransfer.files;
 }
 
-// Event Listeners
 fileInput.addEventListener('change', (e) => {
     handleNewFiles(e.target.files);
-    // 🔴 REMOVED: fileInput.value = ''; 
-    // This line was causing the bug by clearing the files you just added!
 });
 
 dragArea.addEventListener('drop', (e) => {

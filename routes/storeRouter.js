@@ -16,10 +16,8 @@ router.get("/bookings", storeController.getBookings);
 router.post("/bookings", storeController.postBooking);
 router.post("/cancel-booking", storeController.postCancelBooking); // Ensure this matches
 
-// 4. Reservations
-router.get("/reserve/:homeId", storeController.getReserve);
 
-// 5. Favourites
+// 4. Favourites
 router.get("/favourite-list", storeController.getFavouriteList);
 router.post("/favourite-list", storeController.postAddToFavourite);
 router.post("/favourite-list/remove", storeController.postRemoveFavourite);

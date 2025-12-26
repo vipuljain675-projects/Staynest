@@ -106,7 +106,7 @@
                  <div class="fw-bold text-dark">
                     <%= home.availableFrom ? home.availableFrom.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Ask Host' %>
                  </div>
-                 <i class="bi bi-arrow-right text-muted small"></i>
+                 <span class="text-muted fw-bold">&ndash;</span>
                  <div class="fw-bold text-dark">
                     <%= home.availableTo ? home.availableTo.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Ask Host' %>
                  </div>
@@ -116,7 +116,7 @@
       <form action="/bookings" method="POST">     
            <input type="hidden" name="homeId" value="<%= home._id %>">
             
-            <div class="border rounded-4 overflow-hidden mb-3">
+            <div class="border rounded-4 mb-3">
                 <div class="d-flex border-bottom">
                     <div class="w-50 p-2 border-end">
                         <label class="small fw-bold text-uppercase" style="font-size: 0.7rem;">Check-in</label>
@@ -132,22 +132,67 @@
                     </div>
                 </div>
 
-                <div class="p-3 bg-light">
-                    <label class="small fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Who is coming?</label>
+                <div class="p-2 position-relative">
+                    <label class="small fw-bold text-uppercase ps-1" style="font-size: 0.7rem;">Guests</label>
                     
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small">Adults <span class="text-muted" style="font-size: 0.7rem;">(13+)</span></span>
-                        <input type="number" name="adults" value="1" min="1" max="10" class="form-control text-center shadow-none border" style="width: 60px; height: 30px; font-size: 0.9rem;">
-                    </div>
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small">Children <span class="text-muted" style="font-size: 0.7rem;">(2-12)</span></span>
-                        <input type="number" name="children" value="0" min="0" max="5" class="form-control text-center shadow-none border" style="width: 60px; height: 30px; font-size: 0.9rem;">
+                    <div class="d-flex justify-content-between align-items-center p-1" 
+                         style="cursor: pointer;" id="guest-trigger">
+                        <span id="guest-label">1 Guest</span>
+                        <i class="bi bi-chevron-down"></i>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="small">Seniors <span class="text-muted" style="font-size: 0.7rem;">(60+)</span></span>
-                        <input type="number" name="seniors" value="0" min="0" max="5" class="form-control text-center shadow-none border" style="width: 60px; height: 30px; font-size: 0.9rem;">
+                    <input type="hidden" name="adults" id="input-adults" value="1">
+                    <input type="hidden" name="children" id="input-children" value="0">
+                    <input type="hidden" name="seniors" id="input-seniors" value="0">
+
+                    <div id="guest-dropdown" class="position-absolute bg-white shadow-lg rounded-4 p-3 border d-none" 
+                         style="top: 100%; left: 0; right: 0; z-index: 1000;">
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <div class="fw-bold">Adults</div>
+                                <div class="small text-muted">Age 13+</div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <button type="button" class="btn btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center" 
+                                        style="width: 32px; height: 32px;" onclick="updateCount('adults', -1)">-</button>
+                                <span id="display-adults" class="fw-bold" style="width: 20px; text-align: center;">1</span>
+                                <button type="button" class="btn btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center" 
+                                        style="width: 32px; height: 32px;" onclick="updateCount('adults', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <div class="fw-bold">Children</div>
+                                <div class="small text-muted">Ages 2–12</div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <button type="button" class="btn btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center" 
+                                        style="width: 32px; height: 32px;" onclick="updateCount('children', -1)">-</button>
+                                <span id="display-children" class="fw-bold" style="width: 20px; text-align: center;">0</span>
+                                <button type="button" class="btn btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center" 
+                                        style="width: 32px; height: 32px;" onclick="updateCount('children', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div>
+                                <div class="fw-bold">Seniors</div>
+                                <div class="small text-muted">Age 60+</div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <button type="button" class="btn btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center" 
+                                        style="width: 32px; height: 32px;" onclick="updateCount('seniors', -1)">-</button>
+                                <span id="display-seniors" class="fw-bold" style="width: 20px; text-align: center;">0</span>
+                                <button type="button" class="btn btn-outline-secondary rounded-circle p-0 d-flex align-items-center justify-content-center" 
+                                        style="width: 32px; height: 32px;" onclick="updateCount('seniors', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-2">
+                             <button type="button" class="btn btn-link text-decoration-none fw-bold text-dark p-0" onclick="toggleGuestMenu()">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -177,11 +222,10 @@
 
       </div>
     </div>
-
-  </div>
 </main>
 
 <script>
+  // 🟢 MAP LOGIC (Keep existing map code)
   fetch('https://nominatim.openstreetmap.org/search?format=json&q=<%= home.location %>')
     .then(res => res.json())
     .then(data => {
@@ -192,14 +236,56 @@
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap'
       }).addTo(map);
-      L.circle([lat, lon], {
-          color: '#ff385c',
-          fillColor: '#ff385c',
-          fillOpacity: 0.2,
-          radius: 500
-      }).addTo(map);
+      L.circle([lat, lon], { color: '#ff385c', fillColor: '#ff385c', fillOpacity: 0.2, radius: 500 }).addTo(map);
     });
-</script>
 
+  // 🟢 GUEST DROPDOWN LOGIC
+  const guestTrigger = document.getElementById('guest-trigger');
+  const guestDropdown = document.getElementById('guest-dropdown');
+  const guestLabel = document.getElementById('guest-label');
+
+  // Toggle Menu Visibility
+  function toggleGuestMenu() {
+    guestDropdown.classList.toggle('d-none');
+  }
+
+  // Close menu when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!guestTrigger.contains(e.target) && !guestDropdown.contains(e.target)) {
+      guestDropdown.classList.add('d-none');
+    }
+  });
+
+  guestTrigger.addEventListener('click', toggleGuestMenu);
+
+  // Counters
+  const counts = {
+    adults: 1,
+    children: 0,
+    seniors: 0
+  };
+
+  function updateCount(type, change) {
+    const newVal = counts[type] + change;
+
+    // Validation: Adults min 1, others min 0. Max 10.
+    if (type === 'adults' && newVal < 1) return;
+    if (newVal < 0) return;
+    if (newVal > 10) return;
+
+    // Update State
+    counts[type] = newVal;
+
+    // Update UI Number
+    document.getElementById(`display-${type}`).innerText = newVal;
+
+    // Update Hidden Input (For Server)
+    document.getElementById(`input-${type}`).value = newVal;
+
+    // Update Main Label (e.g., "3 Guests")
+    const totalGuests = counts.adults + counts.children + counts.seniors;
+    guestLabel.innerText = `${totalGuests} Guest${totalGuests !== 1 ? 's' : ''}`;
+  }
+</script>
 </body>
 </html>
