@@ -1,0 +1,69 @@
+<%- include('../partials/head') %>
+<body class="bg-white">
+<%- include('../partials/nav') %>
+
+<main class="container-fluid p-0">
+  <div class="row g-0" style="min-height: calc(100vh - 80px);">
+
+    <div class="col-lg-6 position-relative bg-dark">
+      <img 
+        src="https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=2070&auto=format&fit=crop" 
+        alt="Become a Host" 
+        class="w-100 h-100 object-fit-cover"
+        style="position: absolute; top: 0; left: 0; opacity: 0.85;"
+      >
+      <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0));"></div>
+      
+      <div class="position-absolute top-50 start-0 translate-middle-y p-5 text-white d-none d-lg-block" style="max-width: 90%;">
+        <h1 class="display-1 fw-bold mb-3" style="letter-spacing: -2px; text-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+          Airbnb it.
+        </h1>
+        <p class="fs-2 fw-medium" style="line-height: 1.3; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+          You could earn money by sharing your extra space.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
+      <div class="w-100 p-5" style="max-width: 550px;">
+        
+        <h1 class="fw-bold mb-4" style="color: #ff385c;">Open your door to the world</h1>
+        
+        <div class="d-flex gap-4 mb-5">
+          <div>
+            <h5 class="fw-bold">One-to-one guidance</h5>
+            <p class="text-muted small">We’ll match you with a Superhost in your area, who’ll guide you from your first question to your first guest.</p>
+          </div>
+          <div>
+            <h5 class="fw-bold">Experienced guest</h5>
+            <p class="text-muted small">For your first booking, you can choose to welcome an experienced guest who has at least three stays.</p>
+          </div>
+        </div>
+
+        <div class="card bg-light border-0 rounded-4 p-4 mb-4">
+          <div class="d-flex align-items-center gap-3">
+             <div class="bg-white p-2 rounded-circle shadow-sm">
+                <svg viewBox="0 0 32 32" width="24" height="24" fill="#ff385c"><path d="M16 1c2.008 0 3.463.963 4.751 3.269l.533 1.025c1.954 3.83 6.114 12.54 7.1 14.836l.145.353c.667 1.591.91 3.162.726 4.692-.246 2.05-1.453 4.192-3.313 5.877-1.2.088-2.615.534-4.158 1.178-1.544.644-2.88 1.09-3.784 1.17l-.5.01-.005-.5c-.01-1.028-.434-2.37-1.266-4.008l-.208-.403c-.233-.44-.48-1.004-.75-1.688l-.205-.516c-.287-.72-.563-1.41-.8-2.02l-.242-.614c-.03-.075-.058-.15-.084-.223-.024-.068-.048-.135-.07-.202-.02-.057-.038-.112-.056-.165l-.014-.04c-.365-1.03-.687-1.93-1.123-3.153L11.3 17.4c-1.111-3.18-2.083-5.91-2.92-8.204-.836-2.293-1.436-3.868-1.782-4.665l-.086-.197C5.97 3.238 7.394 2.188 9.294 1.54l.504-.15c1.168-.314 2.65-.54 4.298-.636l.462-.024L16 1zm0 2c-1.393 0-2.73.186-3.953.535l-.427.13C10.51 2.146 9.68 2.87 9.073 4.02l-.123.242c.328.756.915 2.308 1.742 4.576.828 2.268 1.79 4.972 2.89 8.12l.275.776c.445 1.25.775 2.17 1.144 3.21l.015.04.056.166.07.203.084.223.243.614c.237.608.513 1.3.8 2.02l.205.516c.27.684.516 1.247.748 1.686l.209.404c.732 1.44 1.106 2.623 1.127 3.513.86-.09 2.147-.514 3.633-1.134 1.488-.62 2.85-1.05 3.998-1.146 1.465-1.328 2.42-2.96 2.617-4.58.152-1.256-.05-2.54-.59-3.83l-.145-.353c-.97-2.257-5.06-10.8-6.974-14.55l-.533-1.025C19.066 3.193 17.828 2.52 16.326 2.9l-.326.098z"></path></svg>
+             </div>
+             <div class="fw-bold">Airbnb Setup</div>
+          </div>
+          <p class="mt-2 mb-0 text-muted">The super easy way to Airbnb your home.</p>
+        </div>
+
+        <div class="d-grid gap-3">
+          <a href="/signup" class="btn btn-primary btn-lg fw-bold py-3 rounded-pill" style="background-color: #ff385c; border: none;">
+            Get Started
+          </a>
+          <div class="text-center small">
+            Already have an account? <a href="/login" class="fw-bold text-dark text-decoration-underline">Log in</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

@@ -1,11 +1,33 @@
 const Home = require("../models/home");
 
-// 🟢 RESTORED: This was missing and caused the crash
+// 🟢 UPDATED: Entry Point for "Switch to Host"
 exports.getHostDashboard = (req, res, next) => {
-  res.redirect('/host/host-home-list');
+  // If user is NOT logged in, show the Sexy Landing Page
+  if (!req.user) {
+    return res.render("host/host-landing", {
+      pageTitle: "Become a Host",
+      currentPage: "host-landing",
+      isAuthenticated: false
+    });
+  }
+
+  // If user IS logged in, check if they have homes
+  Home.find({ userId: req.user._id })
+    .then(homes => {
+      // If they have no homes, go to "Add Home"
+      if (homes.length === 0) {
+        return res.redirect("/host/add-home");
+      }
+      // If they have homes, go to their list
+      res.redirect("/host/host-home-list");
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getAddHome = (req, res, next) => {
+  // 🛡️ Security Check
+  if (!req.user) return res.redirect('/login');
+  
   res.render("host/edit-home", {
     pageTitle: "Add Home",
     currentPage: "add-home",
@@ -15,6 +37,8 @@ exports.getAddHome = (req, res, next) => {
 };
 
 exports.getEditHome = (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
+
   const homeId = req.params.homeId;
   Home.findById(homeId)
     .then((home) => {
@@ -32,6 +56,8 @@ exports.getEditHome = (req, res, next) => {
 };
 
 exports.postAddHome = (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
+
   const { houseName, price, location, rating, description } = req.body;
   
   let photoUrls = [];
@@ -64,6 +90,8 @@ exports.postAddHome = (req, res, next) => {
 };
 
 exports.postEditHome = (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
+
   const { id, houseName, price, location, rating, description } = req.body;
 
   Home.findById(id).then((home) => {
@@ -91,18 +119,22 @@ exports.postEditHome = (req, res, next) => {
 };
 
 exports.postDeleteHome = (req, res, next) => {
-  // 🟢 FIX: Use req.params because the route is /delete-home/:homeId
+  if (!req.user) return res.redirect('/login');
+
   const homeId = req.params.homeId; 
-  
   Home.findByIdAndDelete(homeId)
     .then(() => {
-      console.log("Deleted Home:", homeId); // Optional: for debugging
       res.redirect("/host/host-home-list");
     })
     .catch((err) => console.log(err));
 };
-// 🟢 RENAMED: Changed from 'getHostHomeList' to 'getHostHomes' to match your Router
+
 exports.getHostHomes = (req, res, next) => {
+  // 🟢 CRASH FIX: If user is not logged in, send them to the landing page instead of crashing
+  if (!req.user) {
+    return res.redirect("/host"); 
+  }
+
   Home.find({ userId: req.user._id })
     .then((homes) => {
       res.render("host/host-home-list", {
