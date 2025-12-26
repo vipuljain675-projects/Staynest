@@ -1,83 +1,115 @@
-const Home = require('../models/home');
+const Home = require("../models/home");
 
-exports.getHostDashboard = (req, res) => {
-  if (!req.user) return res.redirect('/login');
-
-  Home.find({ userId: req.user._id })
-    .then(homes => {
-      if (homes.length === 0) {
-        return res.redirect('/host/add-home');
-      }
-      res.redirect('/host/host-home-list');
-    });
+// 🟢 RESTORED: This was missing and caused the crash
+exports.getHostDashboard = (req, res, next) => {
+  res.redirect('/host/host-home-list');
 };
 
-exports.getAddHome = (req, res) => {
-  res.render('host/edit-home', {
-    pageTitle: 'Add Home',
+exports.getAddHome = (req, res, next) => {
+  res.render("host/edit-home", {
+    pageTitle: "Add Home",
+    currentPage: "add-home",
     editing: false,
-    home: {}
+    home: null
   });
 };
 
-exports.postAddHome = (req, res) => {
+exports.getEditHome = (req, res, next) => {
+  const homeId = req.params.homeId;
+  Home.findById(homeId)
+    .then((home) => {
+      if (!home) {
+        return res.redirect("/host/host-home-list");
+      }
+      res.render("host/edit-home", {
+        pageTitle: "Edit Home",
+        currentPage: "host-home-list",
+        editing: true,
+        home: home,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postAddHome = (req, res, next) => {
   const { houseName, price, location, rating, description } = req.body;
+  
+  let photoUrls = [];
+  if (req.files && req.files.length > 0) {
+      photoUrls = req.files.map(file => "/" + file.path.replace(/\\/g, "/"));
+  } else {
+      photoUrls = ["https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1965&auto=format&fit=crop"];
+  }
 
-  const imageUrls = req.files.map(file => '/' + file.path);
-
-  const home = new Home({
+  const newHome = new Home({
     houseName,
     price,
     location,
     rating,
+    photoUrl: photoUrls, 
     description,
-    photoUrl: imageUrls,
-    userId: req.user._id
+    userId: req.user._id, 
   });
 
-  home.save().then(() => res.redirect('/host/host-home-list'));
-};
-
-exports.getHostHomes = (req, res) => {
-  Home.find({ userId: req.user._id })
-    .then(homes => {
-      res.render('host/host-home-list', {
-        pageTitle: 'Your Listings',
-        homes
-      });
+  newHome.save().then(() => {
+    res.render("host/home-added", {
+      pageTitle: "Home Added",
+      currentPage: "host-home-list",
     });
+  })
+  .catch(err => {
+      console.log("Error saving home:", err);
+      res.redirect('/host/add-home');
+  });
 };
 
-exports.getEditHome = (req, res) => {
-  Home.findById(req.params.homeId)
-    .then(home => {
-      res.render('host/edit-home', {
-        pageTitle: 'Edit Home',
-        editing: true,
-        home
-      });
-    });
-};
-
-exports.postEditHome = (req, res) => {
+exports.postEditHome = (req, res, next) => {
   const { id, houseName, price, location, rating, description } = req.body;
 
-  Home.findById(id).then(home => {
+  Home.findById(id).then((home) => {
+    if (!home) {
+      return res.redirect("/host/host-home-list");
+    }
+
     home.houseName = houseName;
     home.price = price;
     home.location = location;
     home.rating = rating;
     home.description = description;
 
-    if (req.files.length > 0) {
-      home.photoUrl = req.files.map(file => '/' + file.path);
+    if (req.files && req.files.length > 0) {
+       const newPhotoUrls = req.files.map(file => "/" + file.path.replace(/\\/g, "/"));
+       home.photoUrl = newPhotoUrls;
     }
 
     return home.save();
-  }).then(() => res.redirect('/host/host-home-list'));
+  })
+  .then(() => {
+    res.redirect("/host/host-home-list");
+  })
+  .catch((err) => console.log(err));
 };
 
-exports.postDeleteHome = (req, res) => {
-  Home.findByIdAndDelete(req.params.homeId)
-    .then(() => res.redirect('/host/host-home-list'));
+exports.postDeleteHome = (req, res, next) => {
+  // 🟢 FIX: Use req.params because the route is /delete-home/:homeId
+  const homeId = req.params.homeId; 
+  
+  Home.findByIdAndDelete(homeId)
+    .then(() => {
+      console.log("Deleted Home:", homeId); // Optional: for debugging
+      res.redirect("/host/host-home-list");
+    })
+    .catch((err) => console.log(err));
+};
+// 🟢 RENAMED: Changed from 'getHostHomeList' to 'getHostHomes' to match your Router
+exports.getHostHomes = (req, res, next) => {
+  Home.find({ userId: req.user._id })
+    .then((homes) => {
+      res.render("host/host-home-list", {
+        pageTitle: "Your Listing",
+        currentPage: "host-home-list",
+        homes: homes,
+      });
+    })
+    .catch((err) => console.log(err));
 };

@@ -23,10 +23,9 @@ const store = new MongoDBStore({
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// --- CRITICAL FIXES FOR IMAGES ---
-// 1. Serve the 'public' folder (CSS, Logo)
+// 1. Serve 'public' folder (CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
-// 2. Serve the 'uploads' folder (User images)
+// 2. Serve 'uploads' folder (Images)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.urlencoded({ extended: false }));
@@ -40,6 +39,7 @@ app.use(
   })
 );
 
+// MIDDLEWARE 1: Find User from Session
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -55,8 +55,11 @@ app.use((req, res, next) => {
     });
 });
 
+// MIDDLEWARE 2: Pass User & Auth State to ALL Views
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
+  // 👇 THIS WAS MISSING. Add this line:
+  res.locals.user = req.user; 
   next();
 });
 
@@ -67,8 +70,9 @@ app.use(authRouter);
 app.use((req, res, next) => {
   res.status(404).render('404', {
     pageTitle: 'Page Not Found',
-    path: '/404',
-    isLoggedIn: req.session.isLoggedIn
+    currentPage: '404',
+    isAuthenticated: req.session.isLoggedIn,
+    user: req.user
   });
 });
 

@@ -1,303 +1,469 @@
 /* =========================================================
    1. GLOBALS & FONTS
 ========================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+/* =========================================================
+   1. GLOBALS & FONTS
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
   --airbnb-red: #ff385c;
   --airbnb-hover: #d90b3e;
   --dark: #222222;
   --gray: #717171;
-  --card-radius: 12px;
-}
-
-* {
-  box-sizing: border-box;
+  --light-gray: #dddddd;
+  --card-radius: 16px;
+  --nav-height: 80px; 
 }
 
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif !important;
+  font-family: 'Manrope', sans-serif !important; 
   color: var(--dark);
   background-color: #fff;
+  -webkit-font-smoothing: antialiased;
+  
+  /* 🔴 THIS IS THE FIX 🔴 */
+  /* This pushes ALL content down so it doesn't hide behind the navbar */
+  padding-top: 100px; 
 }
 
+a { text-decoration: none; color: inherit; }
 
 /* =========================================================
-   2. NAVBAR (FLOATING, CLEAN)
+   2. NAVBAR (REALISTIC)
 ========================================================= */
 .navbar {
-  height: 72px;
+  height: var(--nav-height);
   background: white;
+  border-bottom: 1px solid #ebebeb;
   z-index: 1000;
+  padding: 0 24px !important; /* Specific Airbnb padding */
 }
 
-.navbar a {
-  font-size: 0.95rem;
-}
-
-
-/* =========================================================
-   3. AIRBNB LOGO (NO HUT, NO CIRCLE)
-========================================================= */
+/* LOGO FIXES */
 .airbnb-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Tighter gap */
   text-decoration: none;
 }
 
 .airbnb-belo {
-  width: 30px;
-  height: 30px;
+  width: 32px; /* Precise sizing */
+  height: 32px;
   fill: var(--airbnb-red);
 }
 
 .airbnb-text {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 800; /* Much bolder */
   color: var(--airbnb-red);
-  letter-spacing: -0.4px;
+  letter-spacing: -0.5px; /* Squeeze letters together */
+  position: relative;
+  top: 1px; /* Optical adjustment */
 }
 
+/* SEARCH BAR IN NAV (Small & Clean) */
+.nav-search-pill {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #dddddd;
+  border-radius: 40px;
+  padding: 8px 8px 8px 24px;
+  transition: box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  max-width: 400px;
+  width: 100%;
+}
 
-/* =========================================================
-   4. HERO SECTION (FULL SCREEN – NO WHITE GAP)
-========================================================= */
-.hero-section {
-  position: relative;
-  height: 100vh;
-  background-image: url("/images/hero.jpg");
-  background-size: cover;
-  background-position: center;
+.nav-search-pill:hover {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+}
+
+.nav-search-input {
+  border: none;
+  outline: none;
+  font-weight: 600;
+  color: #222;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.nav-search-btn {
+  background-color: var(--airbnb-red);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
-/* Dark overlay */
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-}
-
-/* Centered content */
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 700px;
-  padding: 20px;
-  text-align: center;
-  margin-top: 72px; /* compensates navbar height */
-}
-
-.hero-content h1 {
-  font-size: 3rem;
-  font-weight: 600;
-}
-
-.hero-content p {
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
-
-
-/* =========================================================
-   5. FLOATING SEARCH BAR (HERO)
-========================================================= */
-.hero-search {
-  background: white;
-  border-radius: 999px;
-  padding: 10px;
+/* USER MENU PILL (The Right Side Revolution) */
+.user-menu-pill {
+  border: 1px solid #dddddd;
+  border-radius: 21px;
+  padding: 5px 5px 5px 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  margin-top: 24px;
+  gap: 12px;
+  transition: box-shadow 0.2s;
+  background: white;
+  cursor: pointer;
 }
 
-.hero-search input {
-  border: none;
-  outline: none;
-  padding: 12px 20px;
-  border-radius: 999px;
-  flex: 1;
-  font-size: 1rem;
+.user-menu-pill:hover {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
 }
 
-.hero-search button {
-  background: var(--airbnb-red);
+.user-avatar {
+  background: #717171;
   color: white;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 999px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+.nav-link-custom {
   font-weight: 600;
+  font-size: 0.95rem;
+  padding: 10px 16px;
+  border-radius: 20px;
+  transition: background 0.2s;
 }
 
-.hero-search button:hover {
-  background: var(--airbnb-hover);
+.nav-link-custom:hover {
+  background-color: #f7f7f7;
 }
-
 
 /* =========================================================
-   6. BUTTONS (AIRBNB RED)
+   3. HERO SECTION (MODERNIZED)
 ========================================================= */
-.btn-primary {
-  background-color: var(--airbnb-red) !important;
-  border-color: var(--airbnb-red) !important;
-  font-weight: 600;
-  padding: 8px 24px;
-  border-radius: 8px;
+.hero-section {
+  position: relative;
+  height: 85vh; /* slightly shorter than full screen */
+  background-image: url("https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2070&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  border-radius: 0 0 24px 24px; /* Curved bottom like new mobile apps */
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--nav-height); 
 }
 
-.btn-primary:hover {
-  background-color: var(--airbnb-hover) !important;
-  border-color: var(--airbnb-hover) !important;
+/* Glassmorphism Card */
+.hero-glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 48px 56px;
+  border-radius: 32px;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+  max-width: 600px;
+  width: 90%;
 }
 
-.btn-outline-primary {
-  color: var(--airbnb-red) !important;
-  border-color: var(--airbnb-red) !important;
-  font-weight: 500;
+.hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  background: -webkit-linear-gradient(45deg, #FF385C, #bd1e59);
+  
+  /* 🔴 The Warning was here because this was missing: */
+  -webkit-background-clip: text;
+  background-clip: text; /* 🟢 ADD THIS LINE */
+  
+  -webkit-text-fill-color: transparent;
 }
 
-.btn-outline-primary:hover {
-  background-color: var(--airbnb-red) !important;
-  color: white !important;
-}
-
-
-/* =========================================================
-   7. CARDS (HOME LISTING)
-========================================================= */
-.card {
-  border: none !important;
-  border-radius: var(--card-radius) !important;
+.big-search-bar {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 50px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  margin-top: 32px;
   transition: transform 0.2s;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+.big-search-bar:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.big-search-input {
+  flex: 1;
+  border: none;
+  padding: 16px 24px;
+  font-size: 1.1rem;
+  outline: none;
+  background: transparent;
+  color: #222;
+}
+
+.big-search-btn {
+  background: var(--airbnb-red);
+  color: white;
+  border: none;
+  border-radius: 40px;
+  padding: 16px 32px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* =========================================================
+   4. CARDS (REFINED)
+========================================================= */
+.card {
+  border: none !important;
+  background: transparent !important;
 }
 
 .card-img-top {
-  border-radius: var(--card-radius);
-  height: 250px;
+  border-radius: 16px !important; /* Rounder */
+  height: 280px !important; /* Taller images */
   object-fit: cover;
+  margin-bottom: 12px;
 }
 
+.card-body {
+  padding: 0 !important; /* Minimalist */
+}
+
+.btn-primary {
+  background-color: var(--airbnb-red) !important;
+  border: none !important;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 12px 24px;
+}
 
 /* =========================================================
-   8. BOARDING PASS (BOOKINGS UI)
+   BOARDING PASS TICKET UI
 ========================================================= */
-.boarding-pass {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+.ticket-container {
   display: flex;
-  margin-bottom: 24px;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
+  justify-content: center;
+  margin-bottom: 32px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15)); /* Soft shadow behind entire shape */
 }
 
-.pass-left {
+.ticket {
+  display: flex;
+  background: white;
+  width: 100%;
+  max-width: 850px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* LEFT SIDE: MAIN INFO */
+.ticket-left {
   flex: 1;
   padding: 24px;
+  display: flex;
+  gap: 24px;
+  border-right: 2px dashed #e0e0e0; /* The perforated line */
   position: relative;
-  border-right: 2px dashed #d1d1d1;
 }
 
-.pass-left::after,
-.pass-left::before {
+/* Semi-circles for "torn" look on the divider line */
+.ticket-left::after, 
+.ticket-left::before {
   content: "";
   position: absolute;
-  right: -10px;
+  right: -10px; /* Halfway over the border */
   width: 20px;
   height: 20px;
-  background-color: #fff;
+  background-color: #f8f9fa; /* Must match body background */
   border-radius: 50%;
-  border: 1px solid #e0e0e0;
+  box-shadow: inset -2px 0 3px rgba(0,0,0,0.05); /* Inner shadow for depth */
 }
 
-.pass-left::after {
-  top: -12px;
+.ticket-left::after { top: -10px; }
+.ticket-left::before { bottom: -10px; }
+
+.ticket-img {
+  width: 160px;
+  height: 100%;
+  min-height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
-.pass-left::before {
-  bottom: -12px;
+.ticket-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.pass-right {
-  width: 150px;
-  background: #f8f9fa;
+/* RIGHT SIDE: ACTIONS */
+.ticket-right {
+  width: 200px;
+  background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff 0%, #fcfcfc 100%);
 }
 
-.pass-label {
+.ticket-label {
   font-size: 0.75rem;
   text-transform: uppercase;
-  color: var(--gray);
-  font-weight: 600;
+  letter-spacing: 1px;
+  color: #717171;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
-.pass-value {
+.ticket-value {
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 12px;
 }
 
-
-/* =========================================================
-   9. IMAGE UPLOAD PREVIEW
-========================================================= */
-#imagePreview {
-  background-color: #f8f9fa;
-  cursor: pointer;
-  border: 2px dashed #ccc;
-  transition: all 0.3s ease;
+.barcode {
+  height: 40px;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #333 0px,
+    #333 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  margin-bottom: 16px;
+  opacity: 0.6;
 }
 
-#imagePreview:hover {
-  border-color: var(--airbnb-red);
-  transform: scale(1.01);
-}
-
-#imagePreview img {
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-
-/* =========================================================
-   10. MAP
-========================================================= */
-#map {
-  border-radius: 16px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-
-/* =========================================================
-   11. MOBILE FIXES
-========================================================= */
 @media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 2.2rem;
-  }
+  .ticket { flex-direction: column; }
+  .ticket-left { border-right: none; border-bottom: 2px dashed #e0e0e0; }
+  .ticket-img { width: 80px; height: 80px; }
+  .ticket-left::after, .ticket-left::before { display: none; }
+}
 
-  .hero-search {
-    flex-direction: column;
-    border-radius: 20px;
-  }
+/* =========================================================
+   MULTI-IMAGE UPLOAD GRID
+========================================================= */
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
 
-  .hero-search button {
-    width: 100%;
+.preview-thumb {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 2px solid #fff;
+}
+
+/* =========================================================
+   DETAIL PAGE - PHOTO GRID & LAYOUT
+========================================================= */
+.listing-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+/* The 1+4 Photo Grid */
+.photo-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Big left, Small right */
+  gap: 8px;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.photo-main {
+  grid-row: 1 / 3; /* Spans full height */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.photo-col {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  height: 400px;
+}
+
+.photo-sub {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.photo-main:hover, .photo-sub:hover {
+  opacity: 0.9;
+}
+
+/* Sticky Booking Sidebar */
+.booking-card {
+  position: sticky;
+  top: 120px; /* Stick below navbar */
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  background: white;
+  z-index: 10;
+}
+
+.price-text {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* Amenities Icons */
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  color: #222;
+}
+
+@media (max-width: 768px) {
+  .photo-grid {
+    grid-template-columns: 1fr;
+    height: auto;
   }
+  .photo-col { display: none; } /* Hide small photos on mobile */
+  .photo-main { height: 250px; }
+  .booking-card { position: static; margin-top: 24px; }
 }

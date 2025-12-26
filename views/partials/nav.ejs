@@ -1,91 +1,92 @@
-<nav class="navbar bg-white border-bottom sticky-top">
-  <div class="container-fluid px-4 d-flex align-items-center gap-4">
+<nav class="navbar fixed-top">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
 
-  <!-- AIRBNB LOGO (OFFICIAL BELO STYLE) -->
-<a href="/" class="airbnb-logo d-flex align-items-center gap-1">
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 1000 1000"
-    aria-hidden="true"
-    style="display:block"
-  >
-    <path
-      fill="#FF385C"
-      d="M500 130c-106 0-192 86-192 192 0 163 192 415 192 415s192-252 192-415c0-106-86-192-192-192zm0 260c-38 0-68-30-68-68s30-68 68-68 68 30 68 68-30 68-68 68z"
-    />
-  </svg>
+    <a href="/" class="airbnb-logo">
+      <svg class="airbnb-belo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false"><path d="M16 1c2.008 0 3.463.963 4.751 3.269l.533 1.025c1.954 3.83 6.114 12.54 7.1 14.836l.145.353c.667 1.591.91 3.162.726 4.692-.246 2.05-1.453 4.192-3.313 5.877-1.2.088-2.615.534-4.158 1.178-1.544.644-2.88 1.09-3.784 1.17l-.5.01-.005-.5c-.01-1.028-.434-2.37-1.266-4.008l-.208-.403c-.233-.44-.48-1.004-.75-1.688l-.205-.516c-.287-.72-.563-1.41-.8-2.02l-.242-.614c-.03-.075-.058-.15-.084-.223-.024-.068-.048-.135-.07-.202-.02-.057-.038-.112-.056-.165l-.014-.04c-.365-1.03-.687-1.93-1.123-3.153L11.3 17.4c-1.111-3.18-2.083-5.91-2.92-8.204-.836-2.293-1.436-3.868-1.782-4.665l-.086-.197C5.97 3.238 7.394 2.188 9.294 1.54l.504-.15c1.168-.314 2.65-.54 4.298-.636l.462-.024L16 1zm0 2c-1.393 0-2.73.186-3.953.535l-.427.13C10.51 2.146 9.68 2.87 9.073 4.02l-.123.242c.328.756.915 2.308 1.742 4.576.828 2.268 1.79 4.972 2.89 8.12l.275.776c.445 1.25.775 2.17 1.144 3.21l.015.04.056.166.07.203.084.223.243.614c.237.608.513 1.3.8 2.02l.205.516c.27.684.516 1.247.748 1.686l.209.404c.732 1.44 1.106 2.623 1.127 3.513.86-.09 2.147-.514 3.633-1.134 1.488-.62 2.85-1.05 3.998-1.146 1.465-1.328 2.42-2.96 2.617-4.58.152-1.256-.05-2.54-.59-3.83l-.145-.353c-.97-2.257-5.06-10.8-6.974-14.55l-.533-1.025C19.066 3.193 17.828 2.52 16.326 2.9l-.326.098zM16 12c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 2c1.105 0 2 .895 2 2s-.895 2-2 2-2-.895-2-2 .895-2 2-2z" fill="#FF385C"></path></svg>
+      <span class="airbnb-text d-none d-md-block">airbnb</span>
+    </a>
 
-  <span class="airbnb-text">airbnb</span>
-</a>
+    <div class="d-none d-md-block flex-grow-1 px-4 text-center">
+      <% if (!locals.isHomeIndex) { %> 
+      <form action="/search" method="GET" class="d-inline-block w-100" style="max-width: 480px;">
+        <div class="nav-search-pill">
+          <input 
+            type="text" 
+            name="q" 
+            class="nav-search-input" 
+            placeholder="Search destinations..."
+            required
+          >
+          <button type="submit" class="nav-search-btn">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 12px; width: 12px; stroke: currentcolor; stroke-width: 5.33333; overflow: visible;"><g fill="none"><path d="m13 24c6.0751322 0 11-4.9248678 11-11 0-6.07513225-4.9248678-11-11-11-6.07513225 0-11 4.92486775-11 11 0 6.0751322 4.92486775 11 11 11zm8-3 9 9"></path></g></svg>
+          </button>
+        </div>
+      </form>
+      <% } %>
+    </div>
 
-
-    <!-- SEARCH (ALWAYS VISIBLE) -->
-<form action="/search" method="GET" class="flex-grow-1" style="max-width: 460px;">
-      <div class="input-group shadow-sm border rounded-pill overflow-hidden">
-        <input
-          type="text"
-          name="q"
-          class="form-control border-0 shadow-none ps-4"
-          placeholder="Search destinations"
-          required
-        >
-       <button
-  class="btn btn-danger rounded-circle m-1"
-  style="width:34px;height:34px;"
-  type="submit"
->
-
-      </div>
-    </form>
-
-    <!-- RIGHT ACTIONS -->
-    <div class="d-flex align-items-center gap-3">
-
-      <a href="/homes" class="fw-semibold text-dark text-decoration-none">
-        Homes
+    <div class="d-flex align-items-center gap-1">
+      
+      <a href="/homes" class="nav-link-custom text-dark">
+        Explore
       </a>
 
       <% if (isAuthenticated) { %>
-
-        <a href="/bookings" class="fw-semibold text-dark text-decoration-none">
+        <a href="/bookings" class="nav-link-custom text-dark">
           Trips
         </a>
-
-        <a href="/favourite-list" class="fw-semibold text-dark text-decoration-none">
+        
+        <a href="/favourite-list" class="nav-link-custom text-dark">
           Saved
         </a>
+      <% } %>
 
-        <a href="/host"
-           class="btn btn-light border rounded-pill px-3 fw-semibold">
-          Switch to Host
-        </a>
+      <div class="border-end mx-2" style="height: 24px;"></div>
 
-        <form action="/logout" method="POST" class="m-0">
-          <button class="btn btn-outline-danger btn-sm rounded-pill px-3">
-            Logout
-          </button>
-        </form>
+      <a href="/host" class="nav-link-custom text-dark d-none d-md-block">
+        Switch to Host
+      </a>
 
+      <% if (isAuthenticated) { %>
+        <div class="dropdown ms-2">
+          <div class="user-menu-pill" data-bs-toggle="dropdown">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 3; overflow: visible;"><g fill="none" fill-rule="nonzero"><path d="m2 16h28"></path><path d="m2 24h28"></path><path d="m2 8h28"></path></g></svg>
+            <div class="user-avatar">
+              <%= user.firstName.charAt(0) %>
+            </div>
+          </div>
+          
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-3" style="width: 240px;">
+            <li><span class="dropdown-header fw-bold">Hello, <%= user.firstName %></span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item py-2" href="/host/host-home-list">Manage Listings</a></li>
+            <li><a class="dropdown-item py-2" href="/host/add-home">Add New Home</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form action="/logout" method="POST" class="m-0">
+                <button class="dropdown-item text-danger fw-bold py-2">Log out</button>
+              </form>
+            </li>
+          </ul>
+        </div>
       <% } else { %>
-
-        <a href="/login" class="fw-semibold text-dark text-decoration-none">
-          Log in
-        </a>
-
-        <a href="/signup"
-           class="btn btn-dark rounded-pill px-3 fw-semibold">
-          Sign up
-        </a>
-
-        <a href="/host"
-           class="btn btn-light border rounded-pill px-3 fw-semibold">
-          Switch to Host
-        </a>
-
+        <div class="dropdown ms-2">
+          <div class="user-menu-pill" data-bs-toggle="dropdown">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 3; overflow: visible;"><g fill="none" fill-rule="nonzero"><path d="m2 16h28"></path><path d="m2 24h28"></path><path d="m2 8h28"></path></g></svg>
+            <div class="user-avatar" style="background: #ddd;">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; height: 18px; width: 18px; fill: currentcolor;"><path d="m16 .7c-8.437 0-15.3 6.863-15.3 15.3s6.863 15.3 15.3 15.3 15.3-6.863 15.3-15.3-6.863-15.3-15.3-15.3zm0 28c-4.021 0-7.605-1.884-9.933-4.81a12.425 12.425 0 0 1 6.451-4.4 6.507 6.507 0 0 1 -3.018-5.49c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5a6.513 6.513 0 0 1 -3.019 5.491 12.42 12.42 0 0 1 6.452 4.4c-2.328 2.925-5.912 4.809-9.933 4.809z"></path></svg>
+            </div>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-3">
+             <li><a class="dropdown-item fw-bold py-2" href="/login">Log in</a></li>
+             <li><a class="dropdown-item py-2" href="/signup">Sign up</a></li>
+             <li><hr class="dropdown-divider"></li>
+             <li><a class="dropdown-item py-2" href="/host">Airbnb your home</a></li>
+          </ul>
+        </div>
       <% } %>
 
     </div>
-
   </div>
 </nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -2,132 +2,168 @@
 <body class="bg-light">
 <%- include('../partials/nav') %>
 
-<main class="container mt-5 mb-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
+<main class="container mb-5" style="margin-top: 40px;">
+  
+  <div class="mb-4">
+    <h1 class="fw-bold mb-2"><% if(editing) { %>Edit your Listing<% } else { %>Add a New Home<% } %></h1>
+    <p class="text-muted d-flex align-items-center gap-2">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block;height:16px;width:16px;fill:currentColor"><path d="M16 .7c-8.437 0-15.3 6.863-15.3 15.3s6.863 15.3 15.3 15.3 15.3-6.863 15.3-15.3-6.863-15.3-15.3-15.3zm0 28c-4.021 0-7.605-1.884-9.933-4.81a12.425 12.425 0 0 1 6.451-4.4 6.507 6.507 0 0 1 -3.018-5.49c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5a6.513 6.513 0 0 1 -3.019 5.491 12.42 12.42 0 0 1 6.452 4.4c-2.328 2.925-5.912 4.809-9.933 4.809z"></path></svg>
+        Hosted by <strong><%= user.firstName %> <%= user.lastName %></strong>
+    </p>
+  </div>
 
-      <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4">
-
-          <h2 class="fw-bold mb-4 text-center">
-            <%= editing ? "Edit your Home" : "Add a New Home" %>
-          </h2>
-
-          <form action="/host/<%= editing ? 'edit-home' : 'add-home' %>"
-                method="POST" enctype="multipart/form-data">
-
-            <% if (editing) { %>
-              <input type="hidden" name="id" value="<%= home._id %>">
+  <form action="/host/<% if(editing) { %>edit-home<% } else { %>add-home<% } %>" method="POST" enctype="multipart/form-data" id="listingForm">
+    <div class="row g-5">
+      
+      <div class="col-lg-7">
+        <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
+            <h4 class="fw-bold mb-4">Property Details</h4>
+            
+            <% if(editing) { %>
+                <input type="hidden" name="id" value="<%= home._id %>">
             <% } %>
 
-            <!-- Property Name -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">House Name</label>
-              <input type="text" name="houseName"
-                     class="form-control form-control-lg"
-                     value="<%= home.houseName || '' %>" required>
-            </div>
-
-            <!-- Price & Rating -->
-            <div class="row mb-3">
-              <div class="col">
-                <label class="form-label fw-semibold">Price / Night</label>
-                <input type="number" name="price"
-                       class="form-control form-control-lg"
-                       value="<%= home.price || '' %>" required>
-              </div>
-              <div class="col">
-                <label class="form-label fw-semibold">Rating</label>
-                <input type="number" step="0.1" name="rating"
-                       class="form-control form-control-lg"
-                       value="<%= home.rating || '' %>" required>
-              </div>
-            </div>
-
-            <!-- Location -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Location</label>
-              <input type="text" name="location"
-                     class="form-control form-control-lg"
-                     value="<%= home.location || '' %>" required>
-            </div>
-
-            <!-- IMAGE UPLOAD (FIXED UX) -->
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Property Images (max 3)</label>
-
-              <label for="imageUpload"
-                     class="w-100 border rounded-4 p-4 text-center bg-white"
-                     style="cursor:pointer; border-style:dashed;">
-                <div id="imagePreview" class="d-flex gap-3 justify-content-center flex-wrap">
-                  <% if (editing && home.photoUrl) { %>
-                    <% home.photoUrl.forEach(img => { %>
-                      <img src="<%= img %>"
-                           class="rounded shadow-sm"
-                           style="width:100px;height:100px;object-fit:cover;">
-                    <% }) %>
-                  <% } else { %>
-                    <div class="text-muted">
-                      <div style="font-size:2.5rem;">＋</div>
-                      <div>Add photos</div>
-                    </div>
-                  <% } %>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label fw-bold small">Home Name</label>
+                    <input type="text" class="form-control p-3 rounded-3" name="houseName" placeholder="e.g. Seaside Villa" value="<% if(editing) { %><%= home.houseName %><% } %>" required>
                 </div>
-              </label>
-
-              <input type="file"
-                     id="imageUpload"
-                     name="photos"
-                     class="d-none"
-                     multiple
-                     accept="image/*"
-                     onchange="previewImages(event)">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small">Price per Night (₹)</label>
+                    <input type="number" class="form-control p-3 rounded-3" name="price" placeholder="e.g. 5000" value="<% if(editing) { %><%= home.price %><% } %>" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small">Initial Rating</label>
+                    <input type="number" class="form-control p-3 rounded-3" name="rating" step="0.1" min="1" max="5" placeholder="e.g. 4.5" value="<% if(editing) { %><%= home.rating %><% } %>" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-bold small">Location</label>
+                    <input type="text" class="form-control p-3 rounded-3" name="location" placeholder="e.g. Goa, India" value="<% if(editing) { %><%= home.location %><% } %>" required>
+                </div>
+                 <div class="col-12">
+                    <label class="form-label fw-bold small">Description</label>
+                    <textarea class="form-control p-3 rounded-3" name="description" rows="4" placeholder="Tell guests about your place..."><% if(editing) { %><%= home.description %><% } %></textarea>
+                </div>
             </div>
-
-            <!-- Description -->
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Description</label>
-              <textarea name="description"
-                        class="form-control form-control-lg"
-                        rows="4"><%= home.description || '' %></textarea>
-            </div>
-
-            <!-- Submit -->
-            <div class="d-grid">
-              <button class="btn btn-primary btn-lg">
-                <%= editing ? "Update Home" : "Add Home" %>
-              </button>
-            </div>
-
-          </form>
-
         </div>
       </div>
 
+      <div class="col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4 p-4 bg-white sticky-top" style="top: 120px;">
+            <h4 class="fw-bold mb-4">Property Photos</h4>
+            <p class="text-muted small mb-3">Upload up to 5 photos. The first one will be your cover image.</p>
+
+            <% if(editing && home.photoUrl && home.photoUrl.length > 0) { %>
+              <div class="mb-3 p-2 bg-light rounded-3">
+                <small class="fw-bold text-muted d-block mb-2">Current Cover Photo:</small>
+                <img src="<%= home.photoUrl[0] %>" class="rounded-3" style="width: 100%; height: 150px; object-fit: cover;">
+                <small class="text-danger d-block mt-2">Uploading new photos will replace all existing ones.</small>
+              </div>
+            <% } %>
+
+            <label for="fileInput" class="drag-drop-area d-block text-center p-5 rounded-4 border-2 border-dashed" style="border-color: #dddddd; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#ff385c" class="bi bi-cloud-arrow-up-fill mb-3" viewBox="0 0 16 16">
+                    <path d="M8 2a5.53 5.53 0 0 0-3.594 1.042A2 2 0 0 0 2 17h12a2 2 0 0 0 2.25-1.584A5.53 5.53 0 0 0 13.5 11h-1v-2.91l2.853 2.853-.708.708L10 7.087V15h-4V7.087L1.354 11.646l-.708-.708 2.853-2.853V11h-1A5.53 5.53 0 0 0 8 2m0 3c-1.5 0-3 1.5-3 3h6c0-1.5-1.5-3-3-3z"/>
+                </svg>
+                <h6 class="fw-bold mb-1">Click or Drag photos here</h6>
+                <span class="text-muted small">Support for JPG, PNG (Max 5 total)</span>
+                <input type="file" id="fileInput" name="photos" class="d-none" multiple accept="image/*">
+            </label>
+
+            <div class="image-preview-grid" id="previewContainer"></div>
+            <div id="fileCount" class="text-muted small mt-2 text-end"></div>
+        </div>
+      </div>
+
+      <div class="col-12 mt-4">
+         <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold" style="background-color: #ff385c; border: none;">
+            <% if(editing) { %>Update Listing<% } else { %>Publish Your Home<% } %>
+        </button>
+      </div>
+
     </div>
-  </div>
+  </form>
 </main>
 
 <script>
-  function previewImages(event) {
-    const files = event.target.files;
-    const preview = document.getElementById('imagePreview');
-    preview.innerHTML = '';
+const fileInput = document.getElementById('fileInput');
+const previewContainer = document.getElementById('previewContainer');
+const dragArea = document.querySelector('.drag-drop-area');
+const fileCountDisplay = document.getElementById('fileCount');
 
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.style.width = '100px';
-        img.style.height = '100px';
-        img.style.objectFit = 'cover';
-        img.className = 'rounded shadow-sm';
-        preview.appendChild(img);
-      };
-      reader.readAsDataURL(file);
+// 1. The Master List of all selected files
+let accumulatedFiles = [];
+
+// Drag and Drop visual effects
+['dragenter', 'dragover'].forEach(eventName => {
+  dragArea.addEventListener(eventName, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      dragArea.style.borderColor = '#ff385c';
+      dragArea.style.background = '#fff0f3';
+  }, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+  dragArea.addEventListener(eventName, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      dragArea.style.borderColor = '#dddddd';
+      dragArea.style.background = '#f8f9fa';
+  }, false);
+});
+
+// 2. Main function to handle incoming files
+function handleNewFiles(newFilesList) {
+    const newFilesArray = Array.from(newFilesList);
+    const validImages = newFilesArray.filter(file => file.type.startsWith('image/'));
+
+    if (accumulatedFiles.length + validImages.length > 5) {
+        alert("You can only upload a maximum of 5 photos in total.");
+        return; 
+    }
+
+    // Add new valid images to master list
+    accumulatedFiles = [...accumulatedFiles, ...validImages];
+
+    // Update UI and Hidden Input
+    updatePreviews();
+    updateHiddenInput();
+}
+
+// 3. Render the previews
+function updatePreviews() {
+    previewContainer.innerHTML = '';
+    fileCountDisplay.textContent = accumulatedFiles.length > 0 ? `${accumulatedFiles.length} / 5 photos selected` : '';
+    
+    accumulatedFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.classList.add('preview-thumb');
+            previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
     });
-  }
+}
+
+// 4. THE MAGIC TRICK: Sync master list back to the hidden HTML input
+function updateHiddenInput() {
+    const dataTransfer = new DataTransfer();
+    accumulatedFiles.forEach(file => dataTransfer.items.add(file));
+    fileInput.files = dataTransfer.files;
+}
+
+// Event Listeners
+fileInput.addEventListener('change', (e) => {
+    handleNewFiles(e.target.files);
+    // 🔴 REMOVED: fileInput.value = ''; 
+    // This line was causing the bug by clearing the files you just added!
+});
+
+dragArea.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    handleNewFiles(dt.files);
+});
 </script>
 
 </body>

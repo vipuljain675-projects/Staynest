@@ -61,6 +61,7 @@ exports.getHomeDetails = (req, res) => {
   const homeId = req.params.homeId;
 
   Home.findById(homeId)
+    .populate("userId") // 🟢 THIS IS THE KEY CHANGE
     .then(home => {
       if (!home) return res.redirect("/homes");
 
@@ -72,7 +73,6 @@ exports.getHomeDetails = (req, res) => {
     })
     .catch(err => console.log(err));
 };
-
 /* =========================
    FAVOURITES
 ========================= */
@@ -80,7 +80,11 @@ exports.getFavouriteList = (req, res) => {
   Favourite.find({ userId: req.user._id })
     .populate("homeId")
     .then(favourites => {
-      const homes = favourites.map(f => f.homeId);
+      // 🟢 FIX: Filter out any homes that might have been deleted
+      // We only keep 'f' if 'f.homeId' is NOT null
+      const homes = favourites
+        .map(f => f.homeId)
+        .filter(home => home !== null);
 
       res.render("store/favourite-list", {
         pageTitle: "My Favourites",
@@ -90,7 +94,6 @@ exports.getFavouriteList = (req, res) => {
     })
     .catch(err => console.log(err));
 };
-
 
 exports.postAddToFavourite = (req, res) => {
   const homeId = req.body.homeId;
@@ -132,16 +135,17 @@ exports.postRemoveFavourite = (req, res) => {
 
 exports.getBookings = (req, res) => {
   Booking.find({ userId: req.user._id })
+    // 👇 ADD THIS LINE to get the real photoUrl
+    .populate('homeId') 
     .then(bookings => {
-      res.render("store/bookings", {
-        pageTitle: "My Bookings",
-        currentPage: "bookings",
-        bookings,
-      });
+        res.render("store/bookings", {
+            pageTitle: "My Bookings",
+            currentPage: "bookings",
+            bookings,
+        });
     })
     .catch(err => console.log(err));
 };
-
 exports.getReserve = (req, res) => {
   Home.findById(req.params.homeId)
     .then(home => {
@@ -157,13 +161,13 @@ exports.getReserve = (req, res) => {
 };
 
 exports.postBooking = (req, res) => {
-  const { homeId, homeName, pricePerNight, checkIn, checkOut } = req.body;
+  const { homeId, homeName, pricePerNight, checkIn, checkOut, adults, children, seniors } = req.body;
 
   const start = new Date(checkIn);
   const end = new Date(checkOut);
 
-  const days =
-    (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
+  // Calculate duration
+  const days = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
 
   if (days <= 0) {
     return res.redirect("/homes");
@@ -171,13 +175,19 @@ exports.postBooking = (req, res) => {
 
   const totalPrice = Number(pricePerNight) * days;
 
+  // 🟢 Create Booking with Guests
   const booking = new Booking({
     homeId,
     homeName,
     userId: req.user._id,
     checkIn: start,
     checkOut: end,
-    totalPrice
+    totalPrice,
+    guests: {
+      adults: Number(adults),
+      children: Number(children),
+      seniors: Number(seniors)
+    }
   });
 
   booking.save()

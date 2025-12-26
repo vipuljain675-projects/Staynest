@@ -16,12 +16,12 @@ router.get('/', hostController.getHostDashboard);
 
 // ADD / EDIT
 router.get('/add-home', hostController.getAddHome);
-router.post('/add-home', upload.array('photos', 3), hostController.postAddHome);
+router.post('/add-home', upload.array('photos', 5), hostController.postAddHome);
 
 router.get('/host-home-list', hostController.getHostHomes);
 
 router.get('/edit-home/:homeId', hostController.getEditHome);
-router.post('/edit-home', upload.array('photos', 3), hostController.postEditHome);
+router.post('/edit-home', upload.array('photos', 5), hostController.postEditHome);
 
 router.post('/delete-home/:homeId', hostController.postDeleteHome);
 
