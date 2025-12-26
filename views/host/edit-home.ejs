@@ -40,9 +40,18 @@
                     <label class="form-label fw-bold small">Location</label>
                     <input type="text" class="form-control p-3 rounded-3" name="location" placeholder="e.g. Goa, India" value="<% if(editing) { %><%= home.location %><% } %>" required>
                 </div>
-                 <div class="col-12">
-                    <label class="form-label fw-bold small">Description</label>
-                    <textarea class="form-control p-3 rounded-3" name="description" rows="4" placeholder="Tell guests about your place..."><% if(editing) { %><%= home.description %><% } %></textarea>
+                <div class="col-12">
+                   <label class="form-label fw-bold small">Availability Window</label>
+                   <div class="input-group">
+                       <span class="input-group-text bg-light">From</span>
+                       <input type="date" class="form-control" name="availableFrom" 
+                              value="<% if(editing && home.availableFrom) { %><%= home.availableFrom.toISOString().split('T')[0] %><% } %>" required>
+                       
+                       <span class="input-group-text bg-light">To</span>
+                       <input type="date" class="form-control" name="availableTo" 
+                              value="<% if(editing && home.availableTo) { %><%= home.availableTo.toISOString().split('T')[0] %><% } %>" required>
+                   </div>
+                   <div class="form-text small text-muted">Guests can only book within this range.</div>
                 </div>
             </div>
         </div>

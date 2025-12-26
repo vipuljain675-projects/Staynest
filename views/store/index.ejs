@@ -5,45 +5,58 @@
 
 <section class="hero-section">
   
-  <div class="hero-glass-card">
-    <h1 class="hero-title">
-      Find your next <br> adventure
-    </h1>
-    <p class="text-muted mb-4" style="font-size: 1.1rem;">
-      Discover homes, cabins, and unique stays around the world.
-    </p>
-
-    <form action="/search" method="GET">
-      <div class="big-search-bar">
-        <div class="ps-3 pe-2 text-start flex-grow-1 border-end">
-          <label class="d-block small fw-bold text-dark" style="font-size: 0.75rem;">Where</label>
-          <input
-            type="text"
-            name="q"
-            class="big-search-input p-0"
-            placeholder="Search destinations"
-            required
-            style="font-size: 0.95rem;"
-          />
-        </div>
+  <div class="position-absolute top-50 start-50 translate-middle w-100 px-3" style="max-width: 850px;">
+      <div class="bg-white p-4 rounded-5 shadow-lg">
         
-        <div class="d-none d-md-block px-3 border-end text-start" style="min-width: 120px; opacity: 0.6;">
-          <div class="small fw-bold text-dark" style="font-size: 0.75rem;">Check in</div>
-          <div style="font-size: 0.9rem;">Add dates</div>
-        </div>
-        
-        <div class="d-none d-md-block px-3 text-start" style="min-width: 120px; opacity: 0.6;">
-           <div class="small fw-bold text-dark" style="font-size: 0.75rem;">Who</div>
-           <div style="font-size: 0.9rem;">Add guests</div>
+        <div class="mb-3 text-center">
+            <h2 class="fw-bold" style="color: #ff385c;">Find your next adventure</h2>
+            <p class="text-muted small">Discover homes, cabins, and unique stays around the world.</p>
         </div>
 
-        <button type="submit" class="big-search-btn">
-          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 4; overflow: visible;"><g fill="none"><path d="m13 24c6.0751322 0 11-4.9248678 11-11 0-6.07513225-4.9248678-11-11-11-6.07513225 0-11 4.92486775-11 11 0 6.0751322 4.92486775 11 11 11zm8-3 9 9"></path></g></svg>
-        </button>
+        <form action="/search" method="GET">
+            <div class="d-flex flex-column flex-md-row gap-2 border rounded-pill p-2 shadow-sm bg-light">
+                
+                <div class="flex-grow-1 position-relative px-3 py-2 bg-white rounded-pill border-0">
+                    <label class="form-label fw-bold small mb-0" style="font-size: 0.75rem;">Where</label>
+                    <input 
+                        type="text" 
+                        name="location"
+                        class="form-control border-0 p-0 shadow-none fw-semibold" 
+                        placeholder="Search destinations" 
+                        required
+                    >
+                </div>
+
+                <div class="px-3 py-2 bg-white rounded-pill border-0" style="min-width: 160px;">
+                    <label class="form-label fw-bold small mb-0" style="font-size: 0.75rem;">Check in</label>
+                    <input 
+                        type="date" 
+                        name="checkIn"
+                        class="form-control border-0 p-0 shadow-none text-muted small" 
+                        required
+                    >
+                </div>
+
+                <div class="px-3 py-2 bg-white rounded-pill border-0" style="min-width: 160px;">
+                    <label class="form-label fw-bold small mb-0" style="font-size: 0.75rem;">Check out</label>
+                    <input 
+                        type="date" 
+                        name="checkOut"
+                        class="form-control border-0 p-0 shadow-none text-muted small" 
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-danger rounded-circle d-flex align-items-center justify-content-center p-0" 
+                        style="width: 55px; height: 55px; background: #ff385c; border: none; min-width: 55px;">
+                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block;fill:none;height:16px;width:16px;stroke:currentColor;stroke-width:4;overflow:visible;color:white"><g fill="none"><path d="m13 24c6.0751322 0 11-4.9248678 11-11 0-6.07513225-4.9248678-11-11-11-6.07513225 0-11 4.92486775-11 11 0 6.0751322 4.92486775 11 11 11zm8-3 9 9"></path></g></svg>
+                </button>
+
+            </div>
+        </form>
+
       </div>
-    </form>
-  </div>
-
+    </div>
 </section>
 
 </body>

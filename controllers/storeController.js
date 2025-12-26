@@ -1,4 +1,5 @@
 const Home = require("../models/home");
+const User = require("../models/user");
 const Booking = require("../models/booking");
 const Favourite = require("../models/favourite");
 
@@ -7,50 +8,29 @@ const Favourite = require("../models/favourite");
 ========================= */
 
 exports.getIndex = (req, res) => {
-  res.render("store/index", {
-    pageTitle: "Airbnb | Welcome",
-    currentPage: "index",
-  });
+  Home.find()
+    .then((homes) => {
+      res.render("store/index", {
+        pageTitle: "Airbnb | Welcome",
+        currentPage: "index",
+        homes: homes,
+        isHomeIndex: true, // Hides the top search bar so we use the big Hero one
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getHomeList = (req, res) => {
   Home.find()
     .then((homes) => {
-      console.log("HOMES FROM DB:", homes); // 👈 ADD THIS LINE
-
       res.render("store/home-list", {
         pageTitle: "Explore Homes",
         currentPage: "home-list",
-        homes,
+        homes: homes,
         isSearch: false,
       });
     })
-    .catch(err => console.log(err));
-};
-
-
-/* =========================
-   SEARCH (SINGLE, CLEAN)
-========================= */
-
-exports.getSearch = (req, res) => {
-  const query = req.query.q;
-
-  Home.find({
-    $or: [
-      { houseName: { $regex: query, $options: "i" } },
-      { location: { $regex: query, $options: "i" } }
-    ]
-  })
-    .then(homes => {
-      res.render("store/home-list", {
-        pageTitle: `Search results for "${query}"`,
-        currentPage: "home-list",
-        homes,
-        isSearch: true,
-      });
-    })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 /* =========================
@@ -61,112 +41,138 @@ exports.getHomeDetails = (req, res) => {
   const homeId = req.params.homeId;
 
   Home.findById(homeId)
-    .populate("userId") // 🟢 THIS IS THE KEY CHANGE
-    .then(home => {
+    .populate("userId") // Shows host info
+    .then((home) => {
       if (!home) return res.redirect("/homes");
 
       res.render("store/home-detail", {
         pageTitle: home.houseName,
         currentPage: "home-list",
-        home,
+        home: home,
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
+
 /* =========================
-   FAVOURITES
+   THE SUPER SEARCH ENGINE
+   (Replaces old getSearch & getSearchResults)
 ========================= */
-exports.getFavouriteList = (req, res) => {
-  Favourite.find({ userId: req.user._id })
-    .populate("homeId")
-    .then(favourites => {
-      // 🟢 FIX: Filter out any homes that might have been deleted
-      // We only keep 'f' if 'f.homeId' is NOT null
-      const homes = favourites
-        .map(f => f.homeId)
-        .filter(home => home !== null);
 
-      res.render("store/favourite-list", {
-        pageTitle: "My Favourites",
-        currentPage: "favourites",
-        favouriteHomes: homes
-      });
+exports.getSearchResults = (req, res, next) => {
+  const { location, checkIn, checkOut, q } = req.query;
+
+  // 🟢 1. UNIFIED SEARCH TEXT
+  // Use 'location' (Hero Form) OR 'q' (Navbar) OR default to empty string
+  let searchLocation = "";
+  if (location) {
+    searchLocation = location;
+  } else if (q) {
+    searchLocation = q;
+  }
+
+  const searchFilter = {
+    location: { $regex: searchLocation, $options: "i" },
+  };
+
+  // 🟢 2. DATE AVAILABILITY LOGIC
+  if (checkIn && checkOut) {
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+
+    // Filter 1: Host Availability Window
+    searchFilter.availableFrom = { $lte: start };
+    searchFilter.availableTo = { $gte: end };
+
+    // Filter 2: Booking Collisions
+    Booking.find({
+      $or: [
+        { checkIn: { $lt: end }, checkOut: { $gt: start } },
+      ],
     })
-    .catch(err => console.log(err));
+      .then((busyBookings) => {
+        const busyHomeIds = busyBookings.map((b) => b.homeId);
+        // Exclude busy homes
+        searchFilter._id = { $nin: busyHomeIds };
+        return Home.find(searchFilter);
+      })
+      .then((homes) => {
+        res.render("store/home-list", {
+          pageTitle: `Stays in ${searchLocation}`,
+          currentPage: "home-list",
+          homes: homes,
+          isSearch: true,
+        });
+      })
+      .catch((err) => console.log(err));
+  } else {
+    // 🟢 3. SIMPLE SEARCH (Location Only)
+    Home.find(searchFilter)
+      .then((homes) => {
+        res.render("store/home-list", {
+          pageTitle: `Stays in ${searchLocation}`,
+          currentPage: "home-list",
+          homes: homes,
+          isSearch: true,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 };
-
-exports.postAddToFavourite = (req, res) => {
-  const homeId = req.body.homeId;
-  const userId = req.user._id;
-
-  Favourite.findOne({ homeId, userId })
-    .then(existingFav => {
-      if (existingFav) {
-        // Already favourited → just redirect
-        return res.redirect("/favourite-list");
-      }
-
-      const fav = new Favourite({ homeId, userId });
-      return fav.save();
-    })
-    .then(() => {
-      res.redirect("/favourite-list");
-    })
-    .catch(err => console.log(err));
-};
-
-
-
-exports.postRemoveFavourite = (req, res) => {
-  const homeId = req.body.homeId;
-
-  Favourite.findOneAndDelete({
-    homeId,
-    userId: req.user._id
-  })
-    .then(() => res.redirect("/favourite-list"))
-    .catch(err => console.log(err));
-};
-
 
 /* =========================
-   BOOKINGS
+   BOOKINGS & RESERVATIONS
 ========================= */
 
 exports.getBookings = (req, res) => {
   Booking.find({ userId: req.user._id })
-    // 👇 ADD THIS LINE to get the real photoUrl
-    .populate('homeId') 
-    .then(bookings => {
-        res.render("store/bookings", {
-            pageTitle: "My Bookings",
-            currentPage: "bookings",
-            bookings,
-        });
+    .populate("homeId")
+    .then((bookings) => {
+      res.render("store/bookings", {
+        pageTitle: "My Bookings",
+        currentPage: "bookings",
+        bookings: bookings,
+      });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
-exports.getReserve = (req, res) => {
-  Home.findById(req.params.homeId)
+
+exports.getReserve = (req, res, next) => {
+  const homeId = req.params.homeId;
+  // 🟢 1. Extract dates from the URL query
+  const { checkIn, checkOut } = req.query;
+
+  if (!req.user) {
+    return res.render("store/book-login", {
+      pageTitle: "Login Required",
+      currentPage: "login",
+      isAuthenticated: false
+    });
+  }
+
+  Home.findById(homeId)
     .then(home => {
       if (!home) return res.redirect("/homes");
-
+      
+      // 🟢 2. Pass dates to the view
       res.render("store/reserve", {
-        pageTitle: "Confirm Booking",
-        currentPage: "home-list",
-        home,
+        pageTitle: "Confirm and Pay",
+        currentPage: "reserve",
+        home: home,
+        user: req.user,
+        checkIn: checkIn,   // Pass these down
+        checkOut: checkOut
       });
     })
     .catch(err => console.log(err));
 };
 
 exports.postBooking = (req, res, next) => {
-  const { homeId, checkIn, checkOut } = req.body;
-
+  const { homeId, checkIn, checkOut, adults, children, seniors } = req.body;
   const newCheckIn = new Date(checkIn);
   const newCheckOut = new Date(checkOut);
 
-  // 1. COLLISION CHECK (Keep this logic)
+  // 1. COLLISION CHECK
   Booking.find({
     homeId: homeId,
     $or: [
@@ -184,15 +190,10 @@ exports.postBooking = (req, res, next) => {
       });
     }
 
-    // 2. FETCH HOME & CALCULATE BILL
-    return Home.findById(homeId)
-      .then(home => {
-        // 🟢 MATH TIME: Calculate nights
+    // 2. SAVE BOOKING
+    return Home.findById(homeId).then(home => {
         const differenceInTime = newCheckOut.getTime() - newCheckIn.getTime();
-        // Convert milliseconds to days (1000ms * 60s * 60m * 24h)
         const nights = Math.ceil(differenceInTime / (1000 * 3600 * 24)); 
-        
-        // 🟢 Calculate Total Price
         const totalPrice = nights * home.price;
 
         const newBooking = new Booking({
@@ -200,24 +201,71 @@ exports.postBooking = (req, res, next) => {
           userId: req.user._id,
           checkIn: newCheckIn,
           checkOut: newCheckOut,
-          
-          // 🟢 FIX: Add the missing fields required by your Model
-          homeName: home.houseName, 
+          homeName: home.houseName,
           totalPrice: totalPrice,
-          price: home.price 
+          price: home.price,
+          // 🟢 SAVE GUESTS
+          guests: {
+            adults: parseInt(adults) || 1,
+            children: parseInt(children) || 0,
+            seniors: parseInt(seniors) || 0
+          }
         });
         
         return newBooking.save();
-      })
-      .then(() => {
-        res.redirect("/bookings");
-      });
+    });
+  })
+  .then(() => {
+      // 🟢 3. REDIRECT TO "MY TRIPS" PAGE
+      // This takes the user to the list where the new Boarding Pass will be visible
+      res.redirect("/bookings");
   })
   .catch(err => console.log(err));
 };
-// ... keep your other exports like getHomeDetails, etc.
+
 exports.postCancelBooking = (req, res) => {
   Booking.findByIdAndDelete(req.body.bookingId)
     .then(() => res.redirect("/bookings"))
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
+};
+
+/* =========================
+   FAVOURITES
+========================= */
+
+exports.getFavouriteList = (req, res, next) => {
+  Favourite.find({ userId: req.user._id })
+    .populate("homeId")
+    .then((favourites) => {
+      const homes = favourites
+        .map((f) => f.homeId)
+        .filter((home) => home !== null); // Filter out deleted homes
+      res.render("store/favourite-list", {
+        pageTitle: "My Favourites",
+        currentPage: "favourites",
+        favouriteHomes: homes,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postAddToFavourite = (req, res, next) => {
+  const homeId = req.body.homeId;
+  Favourite.findOne({ userId: req.user._id, homeId: homeId })
+    .then((fav) => {
+      if (fav) return res.redirect("/favourite-list");
+      const newFav = new Favourite({ userId: req.user._id, homeId: homeId });
+      return newFav.save();
+    })
+    .then(() => res.redirect("/favourite-list"))
+    .catch((err) => console.log(err));
+};
+
+exports.postRemoveFavourite = (req, res, next) => {
+  const homeId = req.body.homeId;
+  Favourite.findOneAndDelete({ userId: req.user._id, homeId: homeId })
+    .then(() => {
+      res.redirect("/favourite-list");
+    })
+    .catch((err) => console.log(err));
 };

@@ -2,110 +2,55 @@
 <body class="bg-white">
 <%- include('../partials/nav') %>
 
-<main class="container mb-5" style="margin-top: 40px;">
-  
-  <div class="mb-4">
-    <a href="/homes/<%= home._id %>" class="text-decoration-none text-dark fw-bold d-flex align-items-center gap-2">
-      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block;fill:none;height:12px;width:12px;stroke:currentColor;stroke-width:5.33333;overflow:visible"><g fill="none"><path d="m20 28-11.29289322-11.2928932c-.39052429-.3905243-.39052429-1.0236893 0-1.4142136l11.29289322-11.2928932"></path></g></svg>
-      Return to listing
-    </a>
-  </div>
-
-  <h1 class="fw-bold mb-5">Request to book</h1>
-
-  <div class="row g-5">
-    
-    <div class="col-lg-7">
+<main class="container my-5">
+  <div class="row">
+    <div class="col-md-7">
+      <h2 class="fw-bold mb-4">Request to book</h2>
       
-      <form action="/bookings" method="POST">
-      <input type="hidden" name="homeId" value="<%= home._id %>">
-      <input type="hidden" name="homeName" value="<%= home.houseName %>">
-      <input type="hidden" name="pricePerNight" value="<%= home.price %>">
-
-      <div class="mb-5 border-bottom pb-4">
-        <h4 class="fw-bold mb-3">Your trip</h4>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="fw-bold small mb-1">Check-in</label>
-            <input type="date" name="checkIn" class="form-control p-3 rounded-3" required>
-          </div>
-          <div class="col-md-6">
-            <label class="fw-bold small mb-1">Check-out</label>
-            <input type="date" name="checkOut" class="form-control p-3 rounded-3" required>
-          </div>
+      <div class="py-4 border-bottom">
+        <h4 class="fw-bold">Your Trip</h4>
+        <div class="d-flex justify-content-between mt-3">
+            <strong>Dates</strong>
+            <span><%= checkIn %> – <%= checkOut %></span>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+            <strong>Guests</strong>
+            <span>1 Guest</span>
         </div>
       </div>
 
-      <div class="mb-5 border-bottom pb-4">
-        <h4 class="fw-bold mb-3">Who's coming?</h4>
+      <div class="py-4">
+        <form action="/bookings" method="POST">
+            <input type="hidden" name="homeId" value="<%= home._id %>">
+            <input type="hidden" name="checkIn" value="<%= checkIn %>">
+            <input type="hidden" name="checkOut" value="<%= checkOut %>">
+
+            <button class="btn btn-primary btn-lg w-100 rounded-3 py-3 fw-bold" 
+                    style="background: #ff385c; border: none;">
+                Confirm and Pay
+            </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-5 ps-md-5">
+      <div class="card p-4 border rounded-4 shadow-sm">
+        <div class="d-flex gap-3 mb-3 border-bottom pb-3">
+            <img src="<%= home.photoUrl[0] %>" class="rounded-3" width="100" height="100" style="object-fit: cover;">
+            <div>
+                <div class="small text-muted">Entire home</div>
+                <div class="fw-bold"><%= home.houseName %></div>
+                <div class="small">★ <%= home.rating %></div>
+            </div>
+        </div>
         
-        <div class="row g-3 align-items-center">
-          <div class="col-4">
-            <label class="fw-bold small">Adults</label>
-            <input type="number" name="adults" class="form-control text-center" value="1" min="1" required>
-          </div>
-          
-          <div class="col-4">
-             <label class="fw-bold small">Children</label>
-             <input type="number" name="children" class="form-control text-center" value="0" min="0">
-          </div>
-
-          <div class="col-4">
-             <label class="fw-bold small">Seniors (60+)</label>
-             <input type="number" name="seniors" class="form-control text-center" value="0" min="0">
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-4">
-        <h4 class="fw-bold mb-3">Contact Info</h4>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <input type="text" name="firstName" class="form-control p-3 rounded-3" placeholder="First Name" required>
-          </div>
-          <div class="col-md-6">
-            <input type="text" name="lastName" class="form-control p-3 rounded-3" placeholder="Last Name" required>
-          </div>
-          <div class="col-md-12">
-            <input type="email" name="email" class="form-control p-3 rounded-3" placeholder="Email Address" required>
-          </div>
-           <div class="col-md-12">
-            <input type="text" name="phone" class="form-control p-3 rounded-3" placeholder="Phone Number" required>
-          </div>
-        </div>
-      </div>
-
-      <div class="pt-2">
-        <button class="btn btn-primary btn-lg w-100 py-3 fw-bold" style="background-color: #ff385c; border: none;">
-          Confirm & Pay
-        </button>
-      </div>
-      
-      </form>
-    </div>
-
-    <div class="col-lg-5">
-      <div class="card shadow-lg border rounded-4 p-4 sticky-top" style="top: 120px; z-index: 1;">
-        <div class="d-flex gap-3 mb-4 border-bottom pb-4">
-          <img src="<%= home.photoUrl[0] %>" class="rounded-3" style="width: 110px; height: 100px; object-fit: cover;">
-          <div class="d-flex flex-column justify-content-center">
-            <div class="text-muted small">Entire home</div>
-            <h5 class="fw-bold mb-1 text-truncate" style="max-width: 200px;"><%= home.houseName %></h5>
-            <div class="small">⭐ <b><%= home.rating %></b></div>
-          </div>
-        </div>
-        <h5 class="fw-bold mb-3">Price details</h5>
-        <div class="d-flex justify-content-between mb-2">
-          <span class="text-decoration-underline">₹<%= home.price %> per night</span>
-          <span>Check dates</span>
-        </div>
-        <div class="d-flex justify-content-between fw-bold fs-5 mt-3 pt-3 border-top">
-          <span>Total (INR)</span>
-          <span>Calculated at checkout</span>
+        <h4 class="fw-bold">Price details</h4>
+        <div class="d-flex justify-content-between mt-3">
+            <span class="text-decoration-underline">₹<%= home.price %> x Nights</span>
+            <span>(Calculated at checkout)</span>
         </div>
       </div>
     </div>
-
   </div>
 </main>
 </body>

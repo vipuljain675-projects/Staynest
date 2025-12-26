@@ -1,6 +1,28 @@
 <%- include('../partials/head') %>
 <body>
 <%- include('../partials/nav') %>
+<div class="w-100 border-bottom bg-white sticky-top" style="top: 80px; z-index: 100;">
+  <div class="container d-flex justify-content-center pt-3 pb-2">
+    <div class="d-flex gap-5">
+      
+      <div class="d-flex flex-column align-items-center" style="cursor: pointer; border-bottom: 2px solid #222; padding-bottom: 10px; opacity: 1;">
+        <svg viewBox="0 0 32 32" width="24" height="24" style="display:block; fill:currentColor"><path d="M16 1L1 16h3v15h9v-9h6v9h9V16h3L16 1z"></path></svg>
+        <span class="small fw-bold mt-2" style="color: #222;">Homes</span>
+      </div>
+
+      <div class="d-flex flex-column align-items-center position-relative" style="cursor: pointer; opacity: 0.6;" onclick="alert('Experiences coming soon in Phase 2!')">
+        <svg viewBox="0 0 32 32" width="24" height="24" style="display:block; fill:currentColor"><path d="M21.5 2h-11a5.5 5.5 0 0 0-5.5 5.5V23a2 2 0 0 0 2 2h4v5h2v-5h6v5h2v-5h4a2 2 0 0 0 2-2V7.5A5.5 5.5 0 0 0 21.5 2zM10 20v-2h2v2h-2zm0-4v-2h2v2h-2zm0-4v-2h2v2h-2zm5 8v-2h2v2h-2zm0-4v-2h2v2h-2zm0-4v-2h2v2h-2zm5 8v-2h2v2h-2zm0-4v-2h2v2h-2zm0-4v-2h2v2h-2z"></path></svg>
+        <span class="small fw-bold mt-2" style="color: #717171;">Experiences</span>
+      </div>
+
+      <div class="d-flex flex-column align-items-center position-relative" style="cursor: pointer; opacity: 0.6;" onclick="alert('Services coming soon in Phase 2!')">
+        <svg viewBox="0 0 32 32" width="24" height="24" style="display:block; fill:currentColor"><path d="M26 23.5L24 20v-7c0-3.86-2.65-7.1-6.25-7.85V4a1.75 1.75 0 1 0-3.5 0v1.15C10.65 5.9 8 9.14 8 13v7l-2 3.5V25h20v-1.5zM16 28a2.5 2.5 0 0 1-2.45-2h4.9A2.5 2.5 0 0 1 16 28z"></path></svg>
+        <span class="small fw-bold mt-2" style="color: #717171;">Services</span>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <main class="container mt-4">
   <h2 class="mb-4">
@@ -31,7 +53,7 @@
                   View
                 </a>
 
-                <form action="/favourite" method="POST">
+                <form action="/favourite-list" method="POST">
                   <input type="hidden" name="homeId" value="<%= home._id %>">
                   <button class="btn btn-outline-danger btn-sm">
                     ♥

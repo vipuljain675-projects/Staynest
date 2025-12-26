@@ -5,13 +5,14 @@ const homeSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   location: { type: String, required: true },
   rating: { type: Number, required: true },
-  
-  // 🔴 CHANGE THIS LINE:
-  // FROM: photoUrl: { type: String, required: true },
-  // TO:
-  photoUrl: [{ type: String }], // It is now an Array of Strings
-
+  photoUrl: [{ type: String }],
   description: { type: String, required: true },
+  amenities: { type: [String], default: [] },
+  
+  // 🟢 NEW: HOST AVAILABILITY DATES
+  availableFrom: { type: Date, required: true },
+  availableTo:   { type: Date, required: true },
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

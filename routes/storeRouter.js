@@ -1,26 +1,27 @@
-// routes/storeRouter.js
 const express = require("express");
 const storeController = require("../controllers/storeController");
 const router = express.Router();
 
-// --- Home Routes ---
+// 1. Home & Index
 router.get("/", storeController.getIndex);
-router.get("/homes", storeController.getHomeList);
+router.get("/homes", storeController.getHomeList); // Matches the renamed function
 router.get("/homes/:homeId", storeController.getHomeDetails);
 
-// --- Favourites ---
-router.get("/favourite-list", storeController.getFavouriteList);
-router.post("/favourite", storeController.postAddToFavourite);
-router.post("/favourite-remove", storeController.postRemoveFavourite);
+// 2. Search (The Fix)
+// We point this to the new "Super Search" function
+router.get("/search", storeController.getSearchResults);
 
-// --- Bookings (THIS IS THE KEY PART) ---
-// If this line is missing or not saved, you get a 404
-router.get("/bookings", storeController.getBookings); 
+// 3. Bookings
+router.get("/bookings", storeController.getBookings);
 router.post("/bookings", storeController.postBooking);
-router.post("/bookings/delete", storeController.postCancelBooking);
+router.post("/cancel-booking", storeController.postCancelBooking); // Ensure this matches
 
-// --- Search & Reserve ---
+// 4. Reservations
 router.get("/reserve/:homeId", storeController.getReserve);
-router.get("/search", storeController.getSearch);
+
+// 5. Favourites
+router.get("/favourite-list", storeController.getFavouriteList);
+router.post("/favourite-list", storeController.postAddToFavourite);
+router.post("/favourite-list/remove", storeController.postRemoveFavourite);
 
 module.exports = router;

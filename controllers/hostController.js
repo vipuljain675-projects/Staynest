@@ -58,22 +58,41 @@ exports.getEditHome = (req, res, next) => {
 exports.postAddHome = (req, res, next) => {
   if (!req.user) return res.redirect('/login');
 
-  const { houseName, price, location, rating, description } = req.body;
+  // 1. Extract all data including the new Amenities and Dates
+  const { 
+    houseName, price, location, rating, description, 
+    amenities, availableFrom, availableTo 
+  } = req.body;
   
+  // 2. Handle Amenities (HTML sends a String if 1 item, Array if multiple)
+  let selectedAmenities = [];
+  if (amenities) {
+      selectedAmenities = Array.isArray(amenities) ? amenities : [amenities];
+  }
+
+  // 3. Handle Images
   let photoUrls = [];
   if (req.files && req.files.length > 0) {
       photoUrls = req.files.map(file => "/" + file.path.replace(/\\/g, "/"));
   } else {
+      // Default image if none provided
       photoUrls = ["https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1965&auto=format&fit=crop"];
   }
 
+  // 4. Create the Home Object
   const newHome = new Home({
     houseName,
     price,
     location,
     rating,
-    photoUrl: photoUrls, 
     description,
+    photoUrl: photoUrls, 
+    
+    // 🟢 NEW: Save Amenities and Dates
+    amenities: selectedAmenities,
+    availableFrom: new Date(availableFrom),
+    availableTo: new Date(availableTo),
+
     userId: req.user._id, 
   });
 
@@ -92,19 +111,36 @@ exports.postAddHome = (req, res, next) => {
 exports.postEditHome = (req, res, next) => {
   if (!req.user) return res.redirect('/login');
 
-  const { id, houseName, price, location, rating, description } = req.body;
+  // 1. Extract all data including ID, Amenities, and Dates
+  const { 
+    id, houseName, price, location, rating, description,
+    amenities, availableFrom, availableTo 
+  } = req.body;
 
   Home.findById(id).then((home) => {
     if (!home) {
       return res.redirect("/host/host-home-list");
     }
 
+    // 2. Update Basic Fields
     home.houseName = houseName;
     home.price = price;
     home.location = location;
     home.rating = rating;
     home.description = description;
 
+    // 3. Update Amenities (Ensure it is always an array)
+    let selectedAmenities = [];
+    if (amenities) {
+        selectedAmenities = Array.isArray(amenities) ? amenities : [amenities];
+    }
+    home.amenities = selectedAmenities;
+
+    // 4. Update Dates
+    home.availableFrom = new Date(availableFrom);
+    home.availableTo = new Date(availableTo);
+
+    // 5. Update Photos (Only if new ones are uploaded)
     if (req.files && req.files.length > 0) {
        const newPhotoUrls = req.files.map(file => "/" + file.path.replace(/\\/g, "/"));
        home.photoUrl = newPhotoUrls;
