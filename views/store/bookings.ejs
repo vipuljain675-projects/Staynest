@@ -2,7 +2,8 @@
 <body class="bg-light">
 <%- include('../partials/nav') %>
 
-<main class="container py-5">
+<main class="container py-5" style="margin-top: 180px;">
+  
   <div class="text-center mb-5">
     <h1 class="fw-bold">Your Trips</h1>
     <p class="text-muted">Manage your upcoming adventures</p>
@@ -12,15 +13,32 @@
     <div class="d-flex flex-column align-items-center gap-5">
       
       <% bookings.forEach(booking => { %>
+        
+        <% 
+           let statusColor = 'bg-warning text-dark'; 
+           let statusIcon = 'bi-hourglass-split';
+           let statusText = 'Request Pending';
+
+           if (booking.status === 'Confirmed') {
+               statusColor = 'bg-success text-white';
+               statusIcon = 'bi-check-circle-fill';
+               statusText = 'Confirmed';
+           } else if (booking.status === 'Rejected') {
+               statusColor = 'bg-danger text-white';
+               statusIcon = 'bi-x-circle-fill';
+               statusText = 'Declined by Host';
+           }
+        %>
+
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden w-100" style="max-width: 850px;">
           
-          <div class="bg-success text-white p-3 px-4 d-flex justify-content-between align-items-center">
+          <div class="<%= statusColor %> p-3 px-4 d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center gap-2">
-                  <i class="bi bi-check-circle-fill fs-5"></i>
-                  <span class="fw-bold text-uppercase" style="letter-spacing: 1px;">Confirmed</span>
+                  <i class="bi <%= statusIcon %> fs-5"></i>
+                  <span class="fw-bold text-uppercase" style="letter-spacing: 1px;"><%= statusText %></span>
               </div>
               <div class="small opacity-75">
-                  Booked on <%= new Date().toLocaleDateString() %>
+                  Booked on <%= new Date(booking.createdAt || Date.now()).toLocaleDateString() %>
               </div>
           </div>
 
@@ -63,28 +81,47 @@
                   <div class="border-top pt-3 mt-4 d-flex justify-content-between align-items-center">
                       <div>
                           <small class="text-muted">Total Paid</small>
-                          <div class="fs-4 fw-bold text-success">₹<%= booking.totalPrice %></div>
+                          <div class="fs-4 fw-bold <%= booking.status === 'Rejected' ? 'text-muted text-decoration-line-through' : 'text-success' %>">
+                             ₹<%= booking.totalPrice %>
+                          </div>
                       </div>
                       
-                      <form action="/cancel-booking" method="POST" onsubmit="return confirm('Are you sure you want to cancel this trip?');">
-                        <input type="hidden" name="bookingId" value="<%= booking._id %>">
-                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold">
-                            Cancel
-                        </button>
-                      </form>
+                      <% if (booking.status !== 'Rejected') { %>
+                          <form action="/cancel-booking" method="POST" onsubmit="return confirm('Are you sure you want to cancel this trip?');">
+                            <input type="hidden" name="bookingId" value="<%= booking._id %>">
+                            <button class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold">
+                                Cancel
+                            </button>
+                          </form>
+                      <% } else { %>
+                          <div class="text-danger small fw-bold">Booking Closed</div>
+                      <% } %>
                   </div>
               </div>
 
               <div class="col-md-4 bg-light p-4 d-flex flex-column align-items-center justify-content-center border-start text-center position-relative">
                   <div class="position-absolute start-0 top-0 bottom-0 border-start border-2 border-dashed" style="left: -1px;"></div>
                   
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<%= booking._id %>" 
-                       alt="QR Code" class="mb-3 mix-blend-multiply" style="width: 120px;">
-                  
-                  <div class="small text-muted fw-bold mb-1">Scan for Check-in</div>
-                  <div class="badge bg-dark text-white rounded-pill px-3 py-2 mt-2">
-                    Host: Super Host
-                  </div>
+                  <% if (booking.status === 'Confirmed') { %>
+                      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<%= booking._id %>" 
+                           alt="QR Code" class="mb-3 mix-blend-multiply" style="width: 120px;">
+                      
+                      <div class="small text-muted fw-bold mb-1">Scan for Check-in</div>
+                      <div class="badge bg-dark text-white rounded-pill px-3 py-2 mt-2">
+                        Enjoy your stay!
+                      </div>
+
+                  <% } else if (booking.status === 'Rejected') { %>
+                      <i class="bi bi-x-circle text-danger mb-3" style="font-size: 4rem;"></i>
+                      <div class="fw-bold text-danger">Booking Failed</div>
+                      <p class="small text-muted mt-2">The host could not accommodate your request.</p>
+
+                  <% } else { %>
+                      <div class="spinner-border text-warning mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+                      <div class="fw-bold text-dark">Awaiting Approval</div>
+                      <p class="small text-muted mt-2">The host has 24 hours to respond.</p>
+                  <% } %>
+
               </div>
 
           </div>

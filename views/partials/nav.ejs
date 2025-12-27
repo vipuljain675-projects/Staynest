@@ -42,6 +42,7 @@
               <% if (isAuthenticated) { %><%= user.firstName.charAt(0) %><% } else { %><i class="bi bi-person-fill"></i><% } %>
             </div>
           </div>
+          
           <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-3">
              <% if (isAuthenticated) { %>
                 <li><span class="dropdown-header fw-bold">Hi, <%= user.firstName %></span></li>
@@ -49,7 +50,14 @@
                 <li><a class="dropdown-item py-2 fw-bold" href="/bookings">My Trips</a></li>
                 <li><a class="dropdown-item py-2 fw-bold" href="/favourite-list">Wishlist</a></li>
                 <li><hr class="dropdown-divider"></li>
+                
                 <li><a class="dropdown-item py-2" href="/host/host-home-list">Manage Listings</a></li>
+                <li><a class="dropdown-item py-2 position-relative" href="/host/manage-bookings">
+                    Handle Requests <span class="badge bg-danger rounded-circle p-1 ms-1" style="font-size: 0.5rem; vertical-align: top;">●</span>
+                </a></li>
+                <li><a class="dropdown-item py-2" href="/host/add-home">Add New Home</a></li>
+
+                <li><hr class="dropdown-divider"></li>
                 <li>
                   <form action="/logout" method="POST" class="m-0"><button class="dropdown-item text-danger fw-bold py-2">Log out</button></form>
                 </li>

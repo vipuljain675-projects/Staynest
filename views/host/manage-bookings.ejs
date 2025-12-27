@@ -1,0 +1,130 @@
+<%- include('../partials/head') %>
+<body class="bg-light">
+<%- include('../partials/nav') %>
+
+<main class="container mb-5" style="margin-top: 180px; max-width: 1000px;">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+      <div>
+        <h2 class="fw-bold mb-1" style="color: #222222;">Reservation Requests</h2>
+        <p class="text-secondary mb-0" style="font-size: 0.95rem;">Review and manage incoming bookings.</p>
+      </div>
+      <span class="badge bg-dark rounded-pill fs-6 px-3 py-2"><%= bookings.length %> Total</span>
+  </div>
+
+  <% if (bookings.length === 0) { %>
+    <div class="text-center py-5 mt-5">
+        <div class="mb-4">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block; height: 60px; width: 60px; fill: #dddddd; margin: auto;"><path d="M16 1c2.008 0 3.463.963 4.751 3.269l.533 1.025c1.954 3.83 6.114 12.54 7.1 14.836l.145.353c.667 1.591.91 3.162.726 4.692-.246 2.05-1.453 4.192-3.313 5.877-1.2.088-2.615.534-4.158 1.178-1.544.644-2.88 1.09-3.784 1.17l-.5.01-.005-.5c-.01-1.028-.434-2.37-1.266-4.008l-.208-.403c-.233-.44-.48-1.004-.75-1.688l-.205-.516c-.287-.72-.563-1.41-.8-2.02l-.242-.614c-.03-.075-.058-.15-.084-.223-.024-.068-.048-.135-.07-.202-.02-.057-.038-.112-.056-.165l-.014-.04c-.365-1.03-.687-1.93-1.123-3.153L11.3 17.4c-1.111-3.18-2.083-5.91-2.92-8.204-.836-2.293-1.436-3.868-1.782-4.665l-.086-.197C5.97 3.238 7.394 2.188 9.294 1.54l.504-.15c1.168-.314 2.65-.54 4.298-.636l.462-.024L16 1zm0 2c-1.393 0-2.73.186-3.953.535l-.427.13C10.51 2.146 9.68 2.87 9.073 4.02l-.123.242c.328.756.915 2.308 1.742 4.576.828 2.268 1.79 4.972 2.89 8.12l.275.776c.445 1.25.775 2.17 1.144 3.21l.015.04.056.166.07.203.084.223.243.614c.237.608.513 1.3.8 2.02l.205.516c.27.684.516 1.247.748 1.686l.209.404c.732 1.44 1.106 2.623 1.127 3.513.86-.09 2.147-.514 3.633-1.134 1.488-.62 2.85-1.05 3.998-1.146 1.465-1.328 2.42-2.96 2.617-4.58.152-1.256-.05-2.54-.59-3.83l-.145-.353c-.97-2.257-5.06-10.8-6.974-14.55l-.533-1.025C19.066 3.193 17.828 2.52 16.326 2.9l-.326.098zM16 12c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 2c1.105 0 2 .895 2 2s-.895 2-2 2-2-.895-2-2 .895-2 2-2z" fill="#dddddd"></path></svg>
+        </div>
+        <h4 class="text-secondary fw-bold">No booking requests yet.</h4>
+        <p class="text-secondary">When guests book your homes, they will appear here.</p>
+    </div>
+  <% } else { %>
+
+    <div class="d-flex flex-column gap-4">
+        <% bookings.forEach(booking => { %>
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden request-card">
+                <div class="row g-0 h-100">
+                    
+                    <div class="col-md-5 col-lg-4 bg-light border-end d-flex flex-column">
+                        <div class="position-relative" style="height: 160px;">
+                            <img src="<%= booking.homeId.photoUrl[0] %>" alt="<%= booking.homeName %>" class="w-100 h-100 object-fit-cover">
+                             <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);">
+                                <h6 class="text-white fw-bold mb-0 text-truncate"><%= booking.homeName %></h6>
+                             </div>
+                        </div>
+                        <div class="p-3 d-flex align-items-center gap-3 flex-grow-1 bg-white">
+                             <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold fs-5 flex-shrink-0" style="width: 50px; height: 50px;">
+                                 <%= booking.userId.firstName.charAt(0) %>
+                             </div>
+                             <div>
+                                 <div class="text-secondary" style="font-size: 0.85rem;">Request from</div>
+                                 <h5 class="fw-bold mb-0 text-dark"><%= booking.userId.firstName %> <%= booking.userId.lastName %></h5>
+                             </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7 col-lg-8 p-4 d-flex flex-column justify-content-between">
+                        
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Trip Dates</h6>
+                                <div class="text-secondary fs-5">
+                                    <%= booking.checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %> 
+                                    — 
+                                    <%= booking.checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+                                </div>
+                                <div class="small text-secondary mt-1">
+                                    <%= (booking.guests.adults || 1) + (booking.guests.children || 0) %> Guests
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <h6 class="fw-bold text-dark mb-1">Total Payout</h6>
+                                <div class="fs-4 fw-bold text-dark">₹<%= booking.totalPrice.toLocaleString() %></div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-top d-flex align-items-center justify-content-between">
+                            
+                            <% if (booking.status === 'Pending') { %>
+                                <div class="d-flex align-items-center gap-2 w-100">
+                                    <form action="/host/manage-bookings" method="POST" class="m-0 flex-grow-1">
+                                        <input type="hidden" name="bookingId" value="<%= booking._id %>">
+                                        <input type="hidden" name="action" value="Confirmed">
+                                        <button class="btn btn-dark btn-lg w-100 rounded-pill fw-bold py-3 hover-scale">
+                                            Accept Request
+                                        </button>
+                                    </form>
+                                    <form action="/host/manage-bookings" method="POST" class="m-0">
+                                        <input type="hidden" name="bookingId" value="<%= booking._id %>">
+                                        <input type="hidden" name="action" value="Rejected">
+                                        <button class="btn btn-outline-secondary btn-lg rounded-circle p-0 d-flex align-items-center justify-content-center hover-danger" style="width: 54px; height: 54px;" title="Decline">
+                                            <i class="bi bi-x-lg fs-5"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            <% } else if (booking.status === 'Confirmed') { %>
+                                <div class="d-flex align-items-center gap-2 text-success fw-bold fs-5">
+                                    <i class="bi bi-check-circle-fill"></i> Accepted
+                                </div>
+                                <button class="btn btn-light rounded-pill px-4 fw-bold" disabled>View Details</button>
+                            <% } else { %>
+                                <div class="d-flex align-items-center gap-2 text-danger fw-bold fs-5">
+                                    <i class="bi bi-x-circle-fill"></i> Declined
+                                </div>
+                                <span class="text-secondary small">Archived</span>
+                            <% } %>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+  <% } %>
+
+</main>
+
+<style>
+    .text-secondary { color: #717171 !important; }
+    .text-dark { color: #222222 !important; }
+    
+    .request-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .request-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important;
+    }
+    .hover-scale:hover { transform: scale(1.02); }
+    .hover-scale:active { transform: scale(0.98); }
+    
+    .hover-danger:hover { 
+        background-color: #dc3545 !important; 
+        color: white !important; 
+        border-color: #dc3545 !important;
+    }
+</style>
+
+</body>
+</html>
