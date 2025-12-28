@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+require('dotenv').config();
+
 
 const User = require('./models/user');
 
@@ -11,7 +13,7 @@ const storeRouter = require('./routes/storeRouter');
 const hostRouter = require('./routes/hostRouter');
 const authRouter = require('./routes/authRouter');
 
-const MONGODB_URI = 'mongodb://127.0.0.1:27017/airbnb';
+const MONGODB_URI = process.env.MONGO_URI;
 
 const app = express();
 
