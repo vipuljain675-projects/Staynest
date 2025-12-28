@@ -79,8 +79,8 @@ app.use((req, res, next) => {
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    app.listen(3500, () => {
-      console.log('Server running at http://localhost:3500');
+    app.listen(4000, () => {
+      console.log('Server running at http://localhost:4000');
     });
   })
   .catch((err) => {
