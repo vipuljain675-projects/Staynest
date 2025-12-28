@@ -5,7 +5,6 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 require('dotenv').config();
 
-
 const User = require('./models/user');
 
 // Import Routes
@@ -14,77 +13,82 @@ const hostRouter = require('./routes/hostRouter');
 const authRouter = require('./routes/authRouter');
 
 const MONGODB_URI = process.env.MONGO_URI;
+const PORT = process.env.PORT || 4000;
 
 const app = express();
 
+/* ---------------- SESSION STORE ---------------- */
 const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions',
 });
 
+store.on('error', (error) => {
+  console.log('Session store error:', error);
+});
+
+/* ---------------- VIEW ENGINE ---------------- */
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// 1. Serve 'public' folder (CSS, JS)
+/* ---------------- STATIC FILES ---------------- */
 app.use(express.static(path.join(__dirname, 'public')));
-// 2. Serve 'uploads' folder (Images)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+/* ---------------- BODY PARSER ---------------- */
 app.use(express.urlencoded({ extended: false }));
 
+/* ---------------- SESSION ---------------- */
 app.use(
   session({
-    secret: 'my secret',
+    secret: process.env.SESSION_SECRET || 'defaultsecret',
     resave: false,
     saveUninitialized: false,
     store: store,
   })
 );
 
-// MIDDLEWARE 1: Find User from Session
-app.use((req, res, next) => {
-  if (!req.session.user) {
-    return next();
+/* ---------------- USER MIDDLEWARE ---------------- */
+app.use(async (req, res, next) => {
+  try {
+    if (!req.session.user) return next();
+    const user = await User.findById(req.session.user._id);
+    if (user) req.user = user;
+    next();
+  } catch (err) {
+    console.log(err);
+    next();
   }
-  User.findById(req.session.user._id)
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-      next();
-    });
 });
 
-// MIDDLEWARE 2: Pass User & Auth State to ALL Views
+/* ---------------- LOCALS FOR EJS ---------------- */
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
-  // 👇 THIS WAS MISSING. Add this line:
-  res.locals.user = req.user; 
+  res.locals.user = req.user;
   next();
 });
 
+/* ---------------- ROUTES ---------------- */
 app.use(storeRouter);
 app.use('/host', hostRouter);
 app.use(authRouter);
 
-app.use((req, res, next) => {
+/* ---------------- 404 ---------------- */
+app.use((req, res) => {
   res.status(404).render('404', {
     pageTitle: 'Page Not Found',
     currentPage: '404',
-    isAuthenticated: req.session.isLoggedIn,
-    user: req.user
   });
 });
 
+/* ---------------- DB + SERVER ---------------- */
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    app.listen(4000, () => {
-      console.log('Server running at http://localhost:4000');
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.log(err);
+    console.log('MongoDB connection failed:', err);
   });
