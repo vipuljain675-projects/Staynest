@@ -2,7 +2,6 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
 require('dotenv').config();
 
 const User = require('./models/user');
@@ -17,16 +16,6 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
-/* ---------------- SESSION STORE ---------------- */
-const store = new MongoDBStore({
-  uri: MONGODB_URI,
-  collection: 'sessions',
-});
-
-store.on('error', (error) => {
-  console.log('Session store error:', error);
-});
-
 /* ---------------- VIEW ENGINE ---------------- */
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -38,13 +27,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 /* ---------------- BODY PARSER ---------------- */
 app.use(express.urlencoded({ extended: false }));
 
-/* ---------------- SESSION ---------------- */
+/* ---------------- SESSION (IN-MEMORY) ---------------- */
+/*
+  NOTE:
+  MongoDB-backed sessions are REMOVED to avoid
+  TLS/OpenSSL issues on Render + Node 22.
+  This is acceptable for demos & portfolios.
+*/
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'defaultsecret',
     resave: false,
     saveUninitialized: false,
-    store: store,
   })
 );
 
@@ -85,6 +79,7 @@ app.use((req, res) => {
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
+    console.log('Connected to MongoDB Atlas');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
