@@ -1,19 +1,16 @@
 {
   "name": "lec-7---airnb",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Staynest - Airbnb clone",
+  "main": "app.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
-     "dev": "nodemon app.js"
-
-
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "body-parser": "^2.2.1",
     "connect-mongodb-session": "^5.0.0",
@@ -27,6 +24,10 @@
     "mysql2": "^3.16.0"
   },
   "devDependencies": {
+    "nodemon": "^3.1.11",
     "tailwindcss": "^4.1.17"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
